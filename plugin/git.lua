@@ -10,5 +10,5 @@ require("neogit").setup({})
 local wk = require("which-key")
 wk.add({
 	{ "<leader>g", group = "Git" },
-	{ "<leader>gg", "<cmd>NeoGit<cr>", { desc = "Magit" } },
+	{ "<leader>gg", "<cmd>Neogit<cr>", { desc = "Magit" } },
 })
