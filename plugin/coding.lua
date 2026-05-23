@@ -41,9 +41,6 @@ require("blink.cmp").setup({
 		-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
 		--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
 	},
-	cmdline = {
-		preset = "inherit",
-	},
 
 	appearance = {
 		-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -99,19 +96,3 @@ require("tree-sitter-manager").setup({
 
 -- Trouble
 require("trouble").setup()
-local actions = require("telescope.actions")
-local open_with_trouble = require("trouble.sources.telescope").open
-
--- Use this to add more results without clearing the trouble list
-local add_to_trouble = require("trouble.sources.telescope").add
-
-local telescope = require("telescope")
-
-telescope.setup({
-	defaults = {
-		mappings = {
-			i = { ["<c-t>"] = open_with_trouble },
-			n = { ["<c-t>"] = open_with_trouble },
-		},
-	},
-})

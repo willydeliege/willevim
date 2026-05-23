@@ -10,6 +10,47 @@ vim.pack.add({
 	"https://github.com/j-hui/fidget.nvim",
 })
 
+-- telescope setup
+require("telescope").setup({
+	defaults = {
+		mappings = {
+			i = {
+				-- map actions.which_key to <C-h> (default: <C-/>)
+				-- actions.which_key shows the mappings for your picker,
+				-- e.g. git_{create, delete, ...}_branch for the git_branches picker
+				["<C-h>"] = "which_key",
+			},
+		},
+	},
+	extensions = {
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown({}),
+		},
+		fzf = {
+			fuzzy = true, -- false will only do exact matching
+			override_generic_sorter = true, -- override the generic sorter
+			override_file_sorter = true, -- override the file sorter
+			case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+			-- the default case_mode is "smart_case"
+		},
+	},
+})
+-- Enable Telescope extensions if they are installed
+require("telescope").load_extension("fzf")
+require("telescope").load_extension("ui-select")
+-- Telscope keymaps
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>fc", function()
+	require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
+end, { desc = "Telescope config files" })
+vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+vim.keymap.set("n", "<leader>/", builtin.current_buffer_fuzzy_find, { desc = "Search current buffer" })
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Telescope recent files" })
+vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Telescope help tags" })
+vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search keymaps" })
+
 -- Oil setup
 require("oil").setup({
 	-- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
@@ -42,27 +83,6 @@ require("nvim-web-devicons").setup({
 			name = "Zsh",
 		},
 	},
-	-- globally enable different highlight colors per icon (default to true)
-	-- if set to false all icons will have the default icon's color
-	color_icons = true,
-	-- globally enable default icons (default to false)
-	-- will get overriden by `get_icons` option
-	default = true,
-	-- globally enable "strict" selection of icons - icon will be looked up in
-	-- different tables, first by filename, and if not found by extension; this
-	-- prevents cases when file doesn't have any extension but still gets some icon
-	-- because its name happened to match some extension (default to false)
-	strict = true,
-	-- set the light or dark variant manually, instead of relying on `background`
-	-- (default to nil)
-	variant = "light|dark",
-	-- override blend value for all highlight groups :h highlight-blend.
-	-- setting this value to `0` will make all icons opaque. in practice this means
-	-- that icons width will not be affected by pumblend option (see issue #608)
-	-- (default to nil)
-	blend = 0,
-	-- same as `override` but specifically for overrides by filename
-	-- takes effect when `strict` is true
 	override_by_filename = {
 		[".gitignore"] = {
 			icon = "",
@@ -146,88 +166,6 @@ require("lualine").setup({
 	extensions = {},
 })
 
--- telescope setup
-require("telescope").setup({
-	defaults = {
-		-- Default configuration for telescope goes here:
-		-- config_key = value,
-		mappings = {
-			i = {
-				-- map actions.which_key to <C-h> (default: <C-/>)
-				-- actions.which_key shows the mappings for your picker,
-				-- e.g. git_{create, delete, ...}_branch for the git_branches picker
-				["<C-h>"] = "which_key",
-			},
-		},
-	},
-	pickers = {
-		-- Default configuration for builtin pickers goes here:
-		-- picker_name = {
-		--   picker_config_key = value,
-		--   ...
-		-- }
-		-- Now the picker_config_key will be applied every time you call this
-		-- builtin picker
-	},
-	extensions = {
-		-- Your extension configuration goes here:
-		-- extension_name = {
-		--   extension_config_key = value,
-		-- }
-		-- please take a look at the readme of the extension you want to configure
-		["ui-select"] = { require("telescope.themes").get_dropdown() },
-	},
-})
--- Enable Telescope extensions if they are installed
-require("telescope").load_extension("fzf")
-require("telescope").load_extension("ui-select")
--- Telscope keymaps
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
-vim.keymap.set("n", "<leader>fc", function()
-	require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
-end, { desc = "Telescope config files" })
-vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
-vim.keymap.set("n", "<leader>/", builtin.current_buffer_fuzzy_find, { desc = "Search current buffer" })
-vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
-vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Telescope recent files" })
-vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Telescope help tags" })
-vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search keymaps" })
-
-local telescope = require("telescope")
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-
--- Fonction personnalisée pour copier la valeur de l'élément sélectionné
-local copy_to_clipboard = function(prompt_bufnr)
-	-- Récupère la sélection actuelle
-	local selection = action_state.get_selected_entry()
-
-	-- Extrait le texte ou le chemin du fichier (dépend du picker utilisé)
-	local value = selection.value or selection[1]
-
-	if value then
-		-- Enregistre la valeur dans le registre "+" (presse-papiers système)
-		vim.fn.setreg("+", value)
-		print("Copié dans le presse-papiers : " .. value)
-	end
-
-	-- Ferme la fenêtre Telescope après l'action
-	actions.close(prompt_bufnr)
-end
-
-telescope.setup({
-	defaults = {
-		mappings = {
-			i = {
-				["<C-y>"] = copy_to_clipboard, -- Copie en mode Insertion
-			},
-			n = {
-				["<C-y>"] = copy_to_clipboard, -- Copie en mode Normal
-			},
-		},
-	},
-})
 -- which-key
 require("which-key").setup({
 	preset = "helix",
