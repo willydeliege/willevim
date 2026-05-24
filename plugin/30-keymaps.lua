@@ -38,3 +38,19 @@ vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev search result" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
+
+vim.pack.add({ "https://github.com/folke/which-key.nvim" })
+require("which-key").setup({
+	preset = "helix",
+	-- Delay between pressing a key and opening which-key (milliseconds)
+	delay = 0,
+	icons = { mappings = vim.g.have_nerd_font },
+	-- Document existing key chains
+	spec = {
+		{ "<leader>f", group = "Find/files", mode = { "n", "v" } },
+		{ "<leader>s", group = "Search", mode = { "n", "v" } },
+		{ "<leader>t", group = "tasks" },
+		{ "<leader>q", group = "Quit" },
+		{ "<leader>o", group = "obsidian", icon = { icon = "", color = "orange" } },
+	},
+})

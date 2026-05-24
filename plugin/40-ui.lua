@@ -6,7 +6,6 @@ vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/nvim-tree/nvim-web-devicons",
 	"https://github.com/stevearc/oil.nvim",
-	"https://github.com/folke/which-key.nvim",
 	"https://github.com/j-hui/fidget.nvim",
 })
 
@@ -204,22 +203,6 @@ require("lualine").setup({
 	winbar = {},
 	inactive_winbar = {},
 	extensions = {},
-})
-
--- which-key
-require("which-key").setup({
-	preset = "helix",
-	-- Delay between pressing a key and opening which-key (milliseconds)
-	delay = 0,
-	icons = { mappings = vim.g.have_nerd_font },
-	-- Document existing key chains
-	spec = {
-		{ "<leader>f", group = "Find/files", mode = { "n", "v" } },
-		{ "<leader>s", group = "Search", mode = { "n", "v" } },
-		{ "<leader>t", group = "tasks" },
-		{ "<leader>q", group = "Quit" },
-		{ "<leader>o", group = "obsidian", icon = { icon = "", color = "orange" } },
-	},
 })
 
 require("fidget").setup({})
