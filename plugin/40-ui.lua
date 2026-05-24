@@ -39,7 +39,48 @@ require("telescope").load_extension("fzf")
 require("telescope").load_extension("ui-select")
 -- Telscope keymaps
 local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+local function toggle_hidden_files()
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
+	-- Initialisation de l'état (persiste entre les ouvertures)
+	if vim.g.telescope_show_hidden == nil then
+		vim.g.telescope_show_hidden = false
+	end
+
+	local opts = {
+		hidden = vim.g.telescope_show_hidden,
+		prompt_title = vim.g.telescope_show_hidden and "Find Files (Hidden Included)" or "Find Files",
+
+		-- Mappage pour basculer en direct à l'intérieur de la fenêtre Telescope
+		attach_mappings = function(prompt_bufnr, map)
+			map({ "i", "n" }, "<C-h>", function()
+				-- Récupère le texte actuellement tapé pour ne pas perdre la recherche en cours
+				local current_picker = action_state.get_current_picker(prompt_bufnr)
+				local current_text = current_picker:_get_prompt()
+
+				actions.close(prompt_bufnr)
+				vim.g.telescope_show_hidden = not vim.g.telescope_show_hidden
+
+				-- Relance instantanément avec le nouvel état et le même texte
+				toggle_hidden_files()
+				vim.schedule(function()
+					local new_picker = action_state.get_current_picker(vim.api.nvim_get_current_buf())
+					if new_picker then
+						new_picker:set_prompt(current_text)
+					end
+				end)
+			end)
+			return true
+		end,
+	}
+
+	builtin.find_files(opts)
+end
+
+-- Associer la fonction à votre touche préférée (ex: <leader>ff)
+vim.keymap.set("n", "<leader>ff", toggle_hidden_files, { desc = "Telescope Find Files (Toggle hidden with <C-h>)" })
+-- vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "<leader>fc", function()
 	require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
 end, { desc = "Telescope config files" })
