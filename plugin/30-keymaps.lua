@@ -31,8 +31,6 @@ vim.keymap.set(
 )
 vim.keymap.set("x", "<A-j>", ":m '>+1<cr>gv=gv", { noremap = true, silent = true, desc = "Move block down" })
 vim.keymap.set("x", "<A-k>", ":m '<-2<cr>gv=gv", { noremap = true, silent = true, desc = "Move block up" })
--- Maps 'J' in normal mode to split the line at the cursor
-vim.keymap.set("n", "J", "i<CR><Esc>", { desc = "Split line" })
 -- Center screen and unfold when jumping to the next/previous search result
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev search result" })
