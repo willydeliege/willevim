@@ -13,13 +13,11 @@ vim.pack.add({
 -- telescope setup
 require("telescope").setup({
 	defaults = {
-		mappings = {
-			i = {
-				-- map actions.which_key to <C-h> (default: <C-/>)
-				-- actions.which_key shows the mappings for your picker,
-				-- e.g. git_{create, delete, ...}_branch for the git_branches picker
-				["<C-h>"] = "which_key",
-			},
+		layout_strategy = "center",
+		layout_config = {
+			width = 0.6, -- change this
+			height = 15, -- fixed row count, or use 0.4 for %
+			preview_cutoff = 1,
 		},
 	},
 	extensions = {
