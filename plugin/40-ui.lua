@@ -19,6 +19,7 @@ require("telescope").setup({
 			height = 15, -- fixed row count, or use 0.4 for %
 			preview_cutoff = 1,
 		},
+		sorting_strategy = "ascending",
 	},
 	extensions = {
 		["ui-select"] = {
