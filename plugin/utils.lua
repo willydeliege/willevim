@@ -6,6 +6,20 @@ vim.pack.add({
 	"https://github.com/folke/flash.nvim",
 	"https://github.com/monaqa/dial.nvim",
 })
+-- Load built-in undotree
+vim.cmd("packadd nvim.undotree")
+
+-- Create a custom function to open it on the right
+local function open_undotree_right()
+	local undotree = require("undotree")
+	undotree.open({
+		title = "Undotree",
+		command = "botright 30vnew", -- Opens a 30-column vertical split on the far right
+	})
+end
+
+-- Map this to <leader>U
+vim.keymap.set("n", "<leader>U", open_undotree_right, { desc = "Open Undotree on the right" })
 
 require("yanky").setup({})
 vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
