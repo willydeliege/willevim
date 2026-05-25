@@ -58,6 +58,11 @@ require("blink.cmp").setup({
 		default = { "lsp", "path", "snippets" },
 		per_filetype = {
 			lua = { inherit_defaults = true, "lazydev" },
+			markdown = {
+				"lsp", -- NOTE: explicitly enable lsp
+				-- inherit_defaults = true, -- NOTE: if your defaults include lsp
+				"dictionary",
+			},
 		},
 		providers = {
 			lazydev = {
