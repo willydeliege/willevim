@@ -10,9 +10,10 @@ keymap.set("n", "<leader>fs", "<cmd>w<cr>", { desc = "Save file" })
 keymap.set("i", "<C-s>", "<esc><cmd>w<cr>", { desc = "Save file" })
 keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 keymap.set("n", "<leader>qq", "<cmd>qall<cr>", { desc = "Quit willevim" })
+keymap.set("n", "<leader>qr", "<cmd>restart<cr>", { desc = "Restart willevim" })
 keymap.set("n", "<leader>fS", "<cmd>luafile %<cr>", { desc = "Source this file" })
-keymap.set("n", "<leader>bd", "<cmd>bdelete", { desc = "Delete buffer" })
-keymap.set("n", "<leader>bw", "<cmd>bwipeout", { desc = "Forget buffer" })
+keymap.set("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer" })
+keymap.set("n", "<leader>bw", "<cmd>bwipeout<cr>", { desc = "Forget buffer" })
 
 -- Remap j and k to act as gj and gk when navigating wrapped lines
 keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
