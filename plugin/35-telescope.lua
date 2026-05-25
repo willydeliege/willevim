@@ -11,6 +11,9 @@ require("project").setup({
 	logging = {
 		enabled = false,
 	},
+	telescope = {
+		tilde = true,
+	},
 })
 vim.keymap.set("n", "<leader>fp", function()
 	require("telescope").extensions.projects.projects({
@@ -65,9 +68,6 @@ require("telescope").load_extension("projects")
 -- Telscope keymaps
 local builtin = require("telescope.builtin")
 local function toggle_hidden_files()
-	-- local actions = require("telescope.actions")
-	-- local action_state = require("telescope.actions.state")
-
 	-- Initialisation de l'état (persiste entre les ouvertures)
 	if vim.g.telescope_show_hidden == nil then
 		vim.g.telescope_show_hidden = false
@@ -103,15 +103,18 @@ local function toggle_hidden_files()
 	builtin.find_files(opts)
 end
 
--- Associer la fonction à votre touche préférée (ex: <leader>ff)
+-- Search file with hidder file toggleable
 vim.keymap.set("n", "<leader>ff", toggle_hidden_files, { desc = "Telescope Find Files (Toggle hidden with <C-h>)" })
 -- vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "<leader>fc", function()
 	require("telescope.builtin").find_files({ cwd = vim.fn.stdpath("config") })
 end, { desc = "Telescope config files" })
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
-vim.keymap.set("n", "<leader>/", builtin.current_buffer_fuzzy_find, { desc = "Search current buffer" })
-vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Project live grep" })
+vim.keymap.set("n", "<leader>sg", builtin.current_buffer_fuzzy_find, { desc = "Search buffer lines" })
+vim.keymap.set("n", "<leader>bb", function()
+	builtin.buffers({ ignore_current_buffer = true })
+end, { desc = "Switch buffers" })
 vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Telescope recent files" })
 vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Telescope help tags" })
 vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search keymaps" })

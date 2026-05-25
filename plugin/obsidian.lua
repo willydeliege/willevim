@@ -31,6 +31,10 @@ require("obsidian").setup({
 	},
 })
 vim.keymap.set("n", "<leader>of", "<cmd>Obsidian quick_switch<cr>", { desc = "Obsidian find file" })
+vim.keymap.set("n", "<leader>on", "<cmd>Obsidian new<cr>", { desc = "Obsidian new file" })
+vim.keymap.set("n", "<leader>ot", "<cmd>Obsidian today<cr>", { desc = "Obsidian open today" })
+vim.keymap.set("n", "<leader>ob", "<cmd>Obsidian backlinkr<cr>", { desc = "Obsidian backlinks" })
+vim.keymap.set("n", "<leader>ol", "<cmd>Obsidian links<cr>", { desc = "Obsidian links" })
 require("render-markdown").setup({
 	bullet = {
 		enabled = true,
