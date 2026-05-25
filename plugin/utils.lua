@@ -4,7 +4,7 @@ vim.pack.add({
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/nvim-mini/mini.surround",
 	"https://github.com/kawre/neotab.nvim",
-	"https://github.com/nvim-mini/mini.jump2d",
+	"https://github.com/folke/flash.nvim",
 	"https://github.com/monaqa/dial.nvim",
 })
 -- Load built-in undotree
@@ -61,12 +61,48 @@ require("neotab").setup({
 })
 
 --jump 2d
-require("mini.jump2d").setup({
-	mappings = {
-		start_jumping = "s",
+require("which-key").add({
+	{
+		"s",
+		mode = { "n", "x", "o" },
+		function()
+			require("flash").jump()
+		end,
+		desc = "Flash",
+	},
+	{
+		"S",
+		mode = { "n", "x", "o" },
+		function()
+			require("flash").treesitter()
+		end,
+		desc = "Flash Treesitter",
+	},
+	{
+		"r",
+		mode = "o",
+		function()
+			require("flash").remote()
+		end,
+		desc = "Remote Flash",
+	},
+	{
+		"R",
+		mode = { "o", "x" },
+		function()
+			require("flash").treesitter_search()
+		end,
+		desc = "Treesitter Search",
+	},
+	{
+		"<c-s>",
+		mode = { "c" },
+		function()
+			require("flash").toggle()
+		end,
+		desc = "Toggle Flash Search",
 	},
 })
-
 -- dial.nvim
 
 local augend = require("dial.augend")
