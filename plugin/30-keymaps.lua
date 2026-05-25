@@ -36,19 +36,60 @@ vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Prev search result" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center cursor" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center cursor" })
-
-vim.pack.add({ "https://github.com/folke/which-key.nvim" })
-require("which-key").setup({
-	preset = "helix",
-	-- Delay between pressing a key and opening which-key (milliseconds)
-	delay = 0,
-	icons = { mappings = vim.g.have_nerd_font },
-	-- Document existing key chains
-	spec = {
-		{ "<leader>f", group = "Find/files", mode = { "n", "v" } },
-		{ "<leader>s", group = "Search", mode = { "n", "v" } },
-		{ "<leader>t", group = "tasks" },
-		{ "<leader>q", group = "Quit" },
-		{ "<leader>o", group = "obsidian", icon = { icon = "", color = "orange" } },
-	},
+do
+	vim.pack.add({ "https://github.com/folke/which-key.nvim" })
+	require("which-key").setup({
+		preset = "helix",
+		-- Delay between pressing a key and opening which-key (milliseconds)
+		delay = 0,
+		-- Document existing key chains
+		spec = {
+			{ "<leader>f", group = "Find/files", mode = { "n", "v" } },
+			{ "<leader>s", group = "Search", mode = { "n", "v" } },
+			{ "<leader>t", group = "Tasks" },
+			{ "<leader>x", group = "Trouble" },
+			{ "<leader>w", proxy = "<c-w>", group = "Windows" }, -- proxy to window mappings
+			{ "<leader>q", group = "Quit" },
+			{ "<leader>o", group = "Obsidian", icon = { icon = "", color = "orange" } },
+		},
+	})
+end
+-- smooth resize
+-- ipo C-w
+vim.pack.add({
+	"https://github.com/aronjohanns/smooth-resize.nvim",
 })
+require("smooth-resize").setup()
+
+vim.keymap.set("n", "<leader>sm", function()
+	local messages = vim.api.nvim_exec2("messages", { output = true })
+	local lines = vim.split(messages.output, "\n", { plain = true })
+
+	require("telescope.pickers")
+		.new({}, {
+			prompt_title = "Neovim Messages",
+			finder = require("telescope.finders").new_table({
+				results = lines,
+				entry_maker = function(line)
+					return {
+						value = line,
+						display = line,
+						ordinal = line,
+					}
+				end,
+			}),
+			sorter = require("telescope.sorters").get_generic_fuzzy_sorter({}),
+			attach_mappings = function(prompt_bufnr, map)
+				-- Optional: Map <CR> to copy the selected message into your clipboard
+				map("i", "<CR>", function()
+					local selection = require("telescope.actions.state").get_selected_entry()
+					if selection then
+						vim.fn.setreg("+", selection.value)
+						print("Copied message to clipboard!")
+					end
+				end)
+				return true
+			end,
+		})
+		:find()
+end, { desc = "Fuzzy search :messages" })
