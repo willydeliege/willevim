@@ -7,7 +7,10 @@ vim.pack.add({
 	"https://github.com/rafamadriz/friendly-snippets",
 	{ src = "https://github.com/romus204/tree-sitter-manager.nvim" },
 	"https://github.com/folke/trouble.nvim",
+	"https://github.com/mason-org/mason.nvim",
 })
+-- Mason install lsp servers, formatters, linters , ...
+require("mason").setup({})
 -- Enable language server
 require("lazydev").setup({
 	library = {
@@ -22,6 +25,7 @@ vim.lsp.enable("lua_ls")
 require("conform").setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
+		markdown = { "prettier" },
 	},
 	format_on_save = {
 		-- These options will be passed to conform.format()
