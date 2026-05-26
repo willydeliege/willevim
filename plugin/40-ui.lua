@@ -104,11 +104,15 @@ do -- Lualine setup
 		},
 		sections = {
 			lualine_a = { "mode" },
-			lualine_b = { "branch", "diff", "diagnostics" },
+			lualine_b = { "project", "branch" },
 			lualine_c = { "filename" },
-			lualine_x = { "encoding", "fileformat", "filetype" },
+			lualine_x = {
+				{ "diff" },
+				{ "diagnostics", icons_enabled = true },
+				"filetype",
+			},
 			lualine_y = { "progress" },
-			lualine_z = { "location" },
+			lualine_z = { "datetime" },
 		},
 		inactive_sections = {
 			lualine_a = {},
