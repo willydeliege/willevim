@@ -3,8 +3,7 @@ vim.pack.add({
 	"https://github.com/folke/lazydev.nvim",
 	"https://github.com/stevearc/conform.nvim",
 	{ src = "https://github.com/saghen/blink.cmp", version = "v1" },
-	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.o") },
-	"https://github.com/rafamadriz/friendly-snippets",
+	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	{ src = "https://github.com/romus204/tree-sitter-manager.nvim" },
 	"https://github.com/folke/trouble.nvim",
 	"https://github.com/mason-org/mason.nvim",
@@ -63,9 +62,9 @@ require("blink.cmp").setup({
 		per_filetype = {
 			lua = { inherit_defaults = true, "lazydev" },
 			markdown = {
-				"lsp", -- NOTE: explicitly enable lsp
-				-- inherit_defaults = true, -- NOTE: if your defaults include lsp
-				"dictionary",
+				-- "lsp", -- NOTE: explicitly enable lsp
+				inherit_defaults = true, -- NOTE: if your defaults include lsp
+				-- "dictionary",
 			},
 		},
 		providers = {
@@ -87,7 +86,7 @@ require("blink.cmp").setup({
 	-- the rust implementation via `'prefer_rust_with_warning'`
 	--
 	-- See `:help blink-cmp-config-fuzzy` for more information
-	fuzzy = { implementation = "prefer_rust_with_warning" },
+	fuzzy = { implementation = "rust" },
 
 	-- Shows a signature help window while you type arguments for a function
 	signature = { enabled = true },
