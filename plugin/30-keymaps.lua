@@ -68,6 +68,7 @@ vim.pack.add({
 })
 require("smooth-resize").setup()
 
+keymap.set("n", "<leader>sc", "<cmd>Telescope command_history<cr>", { desc = "Command history" })
 keymap.set("n", "<leader>sm", function()
 	local messages = vim.api.nvim_exec2("messages", { output = true })
 	local lines = vim.split(messages.output, "\n", { plain = true })
