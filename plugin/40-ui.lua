@@ -165,8 +165,8 @@ do --indent-blank-line setup
 			enabled = true,
 			char = "┃", -- Thicker char for current scope
 			highlight = highlight,
-			show_start = true,
-			show_end = true,
+			show_start = false,
+			show_end = false,
 			injected_languages = true,
 			include = {
 				node_type = {
