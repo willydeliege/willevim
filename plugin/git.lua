@@ -30,14 +30,13 @@ require("gitsigns").setup({
 
 		-- Actions
 		map("n", "<leader>ghs", gitsigns.stage_hunk, { desc = "Stage Git Hunk" })
-		map("n", "<leaderghr", gitsigns.reset_hunk, { desc = "Reset Git Hunk" })
+		map("n", "<leader>ghr", gitsigns.reset_hunk, { desc = "Reset Git Hunk" })
 		map("v", "<leader>ghs", function()
 			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
 		end, { desc = "Stage Hunk" })
 		map("v", "<leader>ghr", function()
 			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
 		end, { desc = "Reset Hunk" })
-		-- map("n", "<leader>ghu", gitsigns.undo_stage_hunk, { desc = "Undo Stage Hunk" })
 		map("n", "<leader>ghR", gitsigns.reset_buffer, { desc = "Reset Entire Buffer" })
 		map("n", "<leader>ghp", gitsigns.preview_hunk, { desc = "Preview Git Hunk" })
 
@@ -45,8 +44,8 @@ require("gitsigns").setup({
 			gitsigns.blame_line({ full = true })
 		end, { desc = "Blame Line" })
 		map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle Line Blame" })
-		map("n", "<leader>ghd", gitsigns.diffthis, { desc = "Git Diff This File" })
-		map("n", "<leader>ghD", function()
+		map("n", "<leader>gd", gitsigns.diffthis, { desc = "Git Diff This File" })
+		map("n", "<leader>gD", function()
 			gitsigns.diffthis("~")
 		end, { desc = "Git Diff vs Last Commit" })
 

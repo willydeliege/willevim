@@ -48,7 +48,14 @@ do
 			{ "<leader>s", group = "Search", mode = { "n", "v" } },
 			{ "<leader>t", group = "Tasks" },
 			{ "<leader>x", group = "Trouble" },
-			{ "<leader>w", proxy = "<c-w>", group = "Windows" }, -- proxy to window mappings
+			{
+				"<leader>w",
+				proxy = "<c-w>",
+				group = "Windows",
+				expand = function()
+					return require("which-key.extras").expand.win()
+				end,
+			}, -- proxy to window mappings
 			{ "<leader>q", group = "Quit" },
 			{ "<leader>o", group = "Obsidian", icon = { icon = "", color = "orange" } },
 		},
@@ -79,7 +86,7 @@ keymap.set("n", "<leader>sm", function()
 				end,
 			}),
 			sorter = require("telescope.sorters").get_generic_fuzzy_sorter({}),
-			attach_mappings = function(prompt_bufnr, map)
+			attach_mappings = function(_, map)
 				-- Optional: Map <CR> to copy the selected message into your clipboard
 				map("i", "<CR>", function()
 					local selection = require("telescope.actions.state").get_selected_entry()
