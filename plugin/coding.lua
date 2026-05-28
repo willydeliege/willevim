@@ -5,10 +5,14 @@ vim.pack.add({
 	{ src = "https://github.com/saghen/blink.cmp", version = "v1" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	{ src = "https://github.com/romus204/tree-sitter-manager.nvim" },
-	"https://github.com/folke/trouble.nvim",
 	"https://github.com/mason-org/mason.nvim",
+	-- "https://github.com/saghen/blink.lib",
 })
--- Mason install lsp servers, formatters, linters , ...
+-- require("blink.lib.lazy_require")
+-- require("blink.cmp").build():wait(60000)
+-- require("blink.cmp").download({ force = true, tags = "*" }):wait(60000)
+
+--Mason install lsp servers, formatters, linters , ...
 require("mason").setup({})
 -- Enable language server
 require("lazydev").setup({
