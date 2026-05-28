@@ -59,13 +59,6 @@ wk.add({
 		desc = "Command History",
 	},
 	{
-		"<leader>n",
-		function()
-			Snacks.picker.notifications()
-		end,
-		desc = "Notification History",
-	},
-	{
 		"<leader>e",
 		function()
 			Snacks.explorer()
@@ -103,9 +96,7 @@ wk.add({
 	},
 	{
 		"<leader>fp",
-		function()
-			Snacks.picker.projects()
-		end,
+		"<cmd>Project snacks<cr>",
 		desc = "Projects",
 	},
 	{
@@ -468,9 +459,7 @@ wk.add({
 	},
 	{
 		"<leader>n",
-		function()
-			Snacks.notifier.show_history()
-		end,
+		"<cmd>Noice pick<cr>",
 		desc = "Notification History",
 	},
 	{
