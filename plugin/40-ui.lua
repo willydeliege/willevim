@@ -1,10 +1,108 @@
 vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
-	"https://github.com/nvim-tree/nvim-web-devicons",
 	"https://github.com/stevearc/oil.nvim",
-	"https://github.com/j-hui/fidget.nvim",
 	"https://github.com/lukas-reineke/indent-blankline.nvim",
 })
+do -- noice
+	-- nvim-notify (optionnel, avant noice)
+	require("notify").setup({
+		background_colour = "#000000",
+		timeout = 3000,
+		render = "compact",
+	})
+
+	-- Configuration de noice.nvim
+	require("noice").setup({
+		-- Rediriger les messages de la cmdline vers le popup
+		cmdline = {
+			enabled = true,
+			view = "cmdline_popup", -- "cmdline" pour comportement classique en bas
+			format = {
+				cmdline = { pattern = "^:", icon = "", lang = "vim" },
+				search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
+				search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
+				filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
+				lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
+				help = { pattern = "^:%s*he?l?p?%s+", icon = "󰋖" },
+			},
+		},
+
+		messages = {
+			enabled = true,
+			view = "notify", -- utilise nvim-notify si installé
+			view_error = "notify",
+			view_warn = "notify",
+			view_history = "messages",
+			view_search = "virtualtext",
+		},
+
+		lsp = {
+			-- Barre de progression LSP
+			progress = {
+				enabled = true,
+				format = "lsp_progress",
+				format_done = "lsp_progress_done",
+				throttle = 1000 / 30,
+				view = "mini",
+			},
+			-- Remplace vim.lsp.buf.hover / signature_help
+			override = {
+				["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+				["vim.lsp.util.stylize_markdown"] = true,
+				["cmp.entry.get_documentation"] = true, -- si nvim-cmp est utilisé
+			},
+			hover = { enabled = true },
+			signature = { enabled = true },
+			message = { enabled = true },
+		},
+
+		presets = {
+			bottom_search = true, -- true = barre de recherche classique en bas
+			command_palette = true, -- cmdline + popupmenu ensemble
+			long_message_to_split = true,
+			inc_rename = false, -- mettre true si inc-rename.nvim est installé
+			lsp_doc_border = true, -- bordure sur hover/signature
+		},
+
+		-- Vue "mini" discrète en bas à droite
+		views = {
+			mini = {
+				win_options = { winblend = 0 },
+				position = { row = -2, col = "100%" },
+			},
+		},
+	})
+
+	-- Raccourcis utiles
+	local map = vim.keymap.set
+
+	-- Historique des messages noice
+	map("n", "<leader>nl", function()
+		require("noice").cmd("last")
+	end, { desc = "Noice: dernier message" })
+	map("n", "<leader>nh", function()
+		require("noice").cmd("history")
+	end, { desc = "Noice: historique" })
+	map("n", "<leader>nd", function()
+		require("noice").cmd("dismiss")
+	end, { desc = "Noice: effacer" })
+	map("n", "<leader>nt", function()
+		require("noice").cmd("fzf")
+	end, { desc = "Noice: fzf" })
+
+	-- Scroll dans les popups hover/signature
+	map({ "n", "i", "s" }, "<c-f>", function()
+		if not require("noice.lsp").scroll(4) then
+			return "<c-f>"
+		end
+	end, { silent = true, expr = true })
+
+	map({ "n", "i", "s" }, "<c-b>", function()
+		if not require("noice.lsp").scroll(-4) then
+			return "<c-b>"
+		end
+	end, { silent = true, expr = true })
+end
 
 do -- Oil setup
 	require("oil").setup({
@@ -24,48 +122,6 @@ do -- Oil setup
 		},
 	})
 	vim.keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
-end
-
-do -- icons
-	require("nvim-web-devicons").setup({
-		-- your personal icons can go here (to override)
-		-- you can specify color or cterm_color instead of specifying both of them
-		-- DevIcon will be appended to `name`
-		override = {
-			zsh = {
-				icon = "",
-				color = "#428850",
-				cterm_color = "65",
-				name = "Zsh",
-			},
-		},
-		override_by_filename = {
-			[".gitignore"] = {
-				icon = "",
-				color = "#f1502f",
-				name = "Gitignore",
-			},
-		},
-		-- same as `override` but specifically for overrides by extension
-		-- takes effect when `strict` is true
-		override_by_extension = {
-			["log"] = {
-				icon = "",
-				color = "#81e043",
-				name = "Log",
-			},
-		},
-		-- same as `override` but specifically for operating system
-		-- takes effect when `strict` is true
-		override_by_operating_system = {
-			["apple"] = {
-				icon = "",
-				color = "#A2AAAD",
-				cterm_color = "248",
-				name = "Apple",
-			},
-		},
-	})
 end
 
 do -- Lualine setup
@@ -128,9 +184,6 @@ do -- Lualine setup
 		extensions = {},
 	})
 end
-
-require("fidget").setup({})
--- Opt-in to hooks system if using v3
 
 do --indent-blank-line setup
 	local highlight = {
