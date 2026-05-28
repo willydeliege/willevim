@@ -1,16 +1,8 @@
 vim.pack.add({
 	"https://github.com/nvim-lua/plenary.nvim",
-	"https://github.com/nvim-tree/nvim-web-devicons",
+	"https://github.com/nvim-mini/mini.nvim",
 	{ src = "https://github.com/DrKJeff16/project.nvim/", name = "project" },
-	{ src = "https://github.com/folke/noice.nvim" },
 	{ src = "https://github.com/folke/snacks.nvim" },
-	{ src = "https://github.com/MunifTanjim/nui.nvim" },
-})
-
-require("noice").setup({
-	presets = {
-		command_palette = true,
-	},
 })
 
 require("snacks").setup({
@@ -24,7 +16,7 @@ require("snacks").setup({
 	statuscolumn = { enabled = true },
 	words = { enabled = true },
 })
-vim.notify = require("snacks").notifier
+vim.notify = require("snacks").notifier -- use snacks.notifier ipo nvim-notify
 
 -- Snacks keymaps
 local wk = require("which-key")
@@ -93,11 +85,6 @@ wk.add({
 			Snacks.picker.git_files()
 		end,
 		desc = "Find Git Files",
-	},
-	{
-		"<leader>fp",
-		"<cmd>Project snacks<cr>",
-		desc = "Projects",
 	},
 	{
 		"<leader>fr",
@@ -459,7 +446,9 @@ wk.add({
 	},
 	{
 		"<leader>n",
-		"<cmd>Noice pick<cr>",
+		function()
+			Snacks.picker.notifications()
+		end,
 		desc = "Notification History",
 	},
 	{
@@ -560,37 +549,92 @@ Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Ba
 Snacks.toggle.inlay_hints():map("<leader>uh")
 Snacks.toggle.indent():map("<leader>ug")
 Snacks.toggle.dim():map("<leader>uD")
-do -- icons
-	require("nvim-web-devicons").setup({
-		-- your personal icons can go here (to override)
-		-- you can specify color or cterm_color instead of specifying both of them
-		-- DevIcon will be appended to `name`
-		override = {
-			zsh = {
-				icon = "",
-				color = "#428850",
-				cterm_color = "65",
-				name = "Zsh",
-			},
-		},
-		override_by_filename = {
-			[".gitignore"] = {
-				icon = "",
-				color = "#f1502f",
-				name = "Gitignore",
-			},
-		},
-		-- same as `override` but specifically for overrides by extension
-		-- takes effect when `strict` is true
-		override_by_extension = {
-			["log"] = {
-				icon = "",
-				color = "#81e043",
-				name = "Log",
-			},
-		},
-	})
-end
+---@type table<number, {token:lsp.ProgressToken, msg:string, done:boolean}[]>
+local progress = vim.defaulttable()
+vim.api.nvim_create_autocmd("LspProgress", {
+	---@param ev {data: {client_id: integer, params: lsp.ProgressParams}}
+	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		local value = ev.data.params.value --[[@as {percentage?: number, title?: string, message?: string, kind: "begin" | "report" | "end"}]]
+		if not client or type(value) ~= "table" then
+			return
+		end
+		local p = progress[client.id]
+
+		for i = 1, #p + 1 do
+			if i == #p + 1 or p[i].token == ev.data.params.token then
+				p[i] = {
+					token = ev.data.params.token,
+					msg = ("[%3d%%] %s%s"):format(
+						value.kind == "end" and 100 or value.percentage or 100,
+						value.title or "",
+						value.message and (" **%s**"):format(value.message) or ""
+					),
+					done = value.kind == "end",
+				}
+				break
+			end
+		end
+
+		local msg = {} ---@type string[]
+		progress[client.id] = vim.tbl_filter(function(v)
+			return table.insert(msg, v.msg) or not v.done
+		end, p)
+
+		local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+		vim.notify(table.concat(msg, "\n"), "info", {
+			id = "lsp_progress",
+			title = client.name,
+			opts = function(notif)
+				notif.icon = #progress[client.id] == 0 and " "
+					or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+			end,
+		})
+	end,
+})
+require("mini.icons").setup()
+require("mini.surround").setup({
+	mappings = {
+		add = "gsa", -- Add surrounding in Normal and Visual modes
+		delete = "gsd", -- Delete surrounding
+		find = "gsf", -- Find surrounding (to the right)
+		find_left = "gsF", -- Find surrounding (to the left)
+		highlight = "gsh", -- Highlight surrounding
+		replace = "gsr", -- Replace surrounding
+		update_n_lines = "gsn", -- Update `n_lines`
+	},
+})
+require("mini.indentscope").setup({
+	symbol = "|",
+})
+require("mini.jump2d").setup()
+require("mini.pairs").setup({
+	-- In which modes mappings from this `config` should be created
+	modes = { insert = true, command = true, terminal = false },
+
+	-- Global mappings. Each right hand side should be a pair information, a
+	-- table with at least these fields (see more in |MiniPairs.map|):
+	-- - <action> - one of 'open', 'close', 'closeopen'.
+	-- - <pair> - two character string for pair to be used.
+	-- By default pair is not inserted after `\`, quotes are not recognized by
+	-- <CR>, `'` does not insert the pair after a letter.
+	-- Only parts of tables can be tweaked (others will use these defaults).
+	mappings = {
+		["("] = { action = "open", pair = "()", neigh_pattern = "^[^\\]" },
+		["["] = { action = "open", pair = "[]", neigh_pattern = "^[^\\]" },
+		["{"] = { action = "open", pair = "{}", neigh_pattern = "^[^\\]" },
+		["<"] = { action = "open", pair = "<>", neigh_pattern = "^[^\\]" },
+
+		[")"] = { action = "close", pair = "()", neigh_pattern = "^[^\\]" },
+		["]"] = { action = "close", pair = "[]", neigh_pattern = "^[^\\]" },
+		["}"] = { action = "close", pair = "{}", neigh_pattern = "^[^\\]" },
+		[">"] = { action = "close", pair = "<>", neigh_pattern = "^[^\\]" },
+
+		['"'] = { action = "closeopen", pair = '""', neigh_pattern = "^[^\\]", register = { cr = false } },
+		["'"] = { action = "closeopen", pair = "''", neigh_pattern = "^[^%a\\]", register = { cr = false } },
+		["`"] = { action = "closeopen", pair = "``", neigh_pattern = "^[^\\]", register = { cr = false } },
+	},
+})
 require("project").setup({
 	enable_autochdir = true,
 	logging = {

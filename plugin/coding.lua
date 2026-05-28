@@ -4,6 +4,7 @@ vim.pack.add({
 	"https://github.com/stevearc/conform.nvim",
 	{ src = "https://github.com/saghen/blink.cmp", version = "v1" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
+	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/romus204/tree-sitter-manager.nvim" },
 	"https://github.com/mason-org/mason.nvim",
 	-- "https://github.com/saghen/blink.lib",
@@ -65,11 +66,6 @@ require("blink.cmp").setup({
 		default = { "lsp", "path", "snippets" },
 		per_filetype = {
 			lua = { inherit_defaults = true, "lazydev" },
-			markdown = {
-				-- "lsp", -- NOTE: explicitly enable lsp
-				inherit_defaults = true, -- NOTE: if your defaults include lsp
-				-- "dictionary",
-			},
 		},
 		providers = {
 			lazydev = {
@@ -79,6 +75,27 @@ require("blink.cmp").setup({
 				-- make lazydev completions top priority (see `:h blink.cmp`)
 				score_offset = 100,
 			},
+			snippets = {
+				name = "snippets",
+				module = "blink.cmp.sources.snippets",
+			},
+		},
+	},
+	cmdline = {
+		enabled = true,
+		keymap = {
+			preset = "cmdline",
+			["<Right>"] = false,
+			["<Left>"] = false,
+		},
+		completion = {
+			list = { selection = { preselect = false } },
+			menu = {
+				auto_show = function(ctx)
+					return vim.fn.getcmdtype() == ":"
+				end,
+			},
+			ghost_text = { enabled = true },
 		},
 	},
 

@@ -2,7 +2,6 @@
 vim.pack.add({
 	"https://github.com/obsidian-nvim/obsidian.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
-	"https://github.com/iamcco/markdown-preview.nvim",
 	"https://github.com/bngarren/checkmate.nvim",
 })
 

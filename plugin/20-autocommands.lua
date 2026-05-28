@@ -57,17 +57,17 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 -- Help to the right
-vim.api.nvim_create_autocmd("BufWinEnter", {
-	pattern = "*",
-	callback = function(event)
-		if vim.bo[event.buf].filetype == "help" then
-			-- Forces it to open in a vertical split to the right
-			vim.cmd("wincmd L")
-			-- Resizes the help window (replace 60 with your preferred width)
-			vim.cmd("vertical resize 60")
-		end
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufWinEnter", {
+-- 	pattern = "*",
+-- 	callback = function(event)
+-- 		if vim.bo[event.buf].filetype == "help" then
+-- 			-- Forces it to open in a vertical split to the right
+-- 			vim.cmd("wincmd L")
+-- 			-- Resizes the help window (replace 60 with your preferred width)
+-- 			vim.cmd("vertical resize 60")
+-- 		end
+-- 	end,
+-- })
 
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
@@ -75,5 +75,12 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		vim.defer_fn(function()
 			vim.diagnostic.reset()
 		end, 100)
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "lua", "markdown" },
+	callback = function()
+		vim.treesitter.start()
 	end,
 })

@@ -1,7 +1,6 @@
 vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/stevearc/oil.nvim",
-	"https://github.com/lukas-reineke/indent-blankline.nvim",
 })
 
 do -- Oil setup
@@ -23,7 +22,7 @@ do -- Oil setup
 	})
 	vim.keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
 end
-
+--
 do -- Lualine setup
 	require("lualine").setup({
 		options = {
@@ -82,67 +81,5 @@ do -- Lualine setup
 		winbar = {},
 		inactive_winbar = {},
 		extensions = {},
-	})
-end
-
-do --indent-blank-line setup
-	local highlight = {
-		"RainbowRed",
-		"RainbowYellow",
-		"RainbowBlue",
-		"RainbowOrange",
-		"RainbowGreen",
-		"RainbowViolet",
-		"RainbowCyan",
-	}
-
-	local hooks = require("ibl.hooks")
-	hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-		vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-		vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-		vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-		vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-		vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-		vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-		vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-	end)
-
-	require("ibl").setup({
-		indent = {
-			char = "│", -- Character used for indent guides
-			tab_char = "│", -- Character for tab indents
-			-- highlight = highlight,
-			smart_indent_cap = true,
-		},
-		whitespace = {
-			highlight = "IblWhitespace",
-			remove_blankline_trail = true,
-		},
-		scope = {
-			enabled = true,
-			char = "┃", -- Thicker char for current scope
-			highlight = highlight,
-			show_start = false,
-			show_end = false,
-			injected_languages = true,
-			include = {
-				node_type = {
-					["*"] = { "*" }, -- Highlight scope for all node types
-				},
-			},
-		},
-		exclude = {
-			filetypes = {
-				"help",
-				"dashboard",
-				"neo-tree",
-				"Trouble",
-				"lazy",
-				"mason",
-				"notify",
-				"toggleterm",
-			},
-			buftypes = { "terminal", "nofile" },
-		},
 	})
 end
