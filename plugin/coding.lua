@@ -100,45 +100,9 @@ require("blink.cmp").setup({
 -- Treesitter
 require("tree-sitter-manager").setup({
 	-- Default Options
-	ensure_installed = { "lua" }, -- list of parsers to install at the start of a neovim session
-	-- border = nil, -- border style for the window (e.g. "rounded", "single"), if nil, use the default border style defined by 'vim.o.winborder'. See :h 'winborder' for more info.
-	-- auto_install = false, -- if enabled, install missing parsers when editing a new file
+	ensure_installed = { "lua", "markdown" }, -- list of parsers to install at the start of a neovim session
+	border = "rounded", -- border style for the window (e.g. "rounded", "single"), if nil, use the default border style defined by 'vim.o.winborder'. See :h 'winborder' for more info.
+	auto_install = true, -- if enabled, install missing parsers when editing a new file
 	-- highlight = true, -- treesitter highlighting is enabled by default
 	-- languages = {}, -- override or add new parser sources
-})
-
--- Trouble
-require("trouble").setup()
-local wk = require("which-key")
-wk.add({
-	{
-		"<leader>xx",
-		"<cmd>Trouble diagnostics toggle<cr>",
-		desc = "Diagnostics (Trouble)",
-	},
-	{
-		"<leader>xX",
-		"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-		desc = "Buffer Diagnostics (Trouble)",
-	},
-	{
-		"<leader>cs",
-		"<cmd>Trouble symbols toggle focus=false<cr>",
-		desc = "Symbols (Trouble)",
-	},
-	{
-		"<leader>cl",
-		"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-		desc = "LSP Definitions / references / ... (Trouble)",
-	},
-	{
-		"<leader>xL",
-		"<cmd>Trouble loclist toggle<cr>",
-		desc = "Location List (Trouble)",
-	},
-	{
-		"<leader>xQ",
-		"<cmd>Trouble qflist toggle<cr>",
-		desc = "Quickfix List (Trouble)",
-	},
 })
