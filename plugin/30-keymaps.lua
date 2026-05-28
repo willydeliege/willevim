@@ -69,35 +69,31 @@ vim.pack.add({
 require("smooth-resize").setup()
 
 keymap.set("n", "<leader>sc", "<cmd>Telescope command_history<cr>", { desc = "Command history" })
-keymap.set("n", "<leader>sm", function()
-	local messages = vim.api.nvim_exec2("messages", { output = true })
-	local lines = vim.split(messages.output, "\n", { plain = true })
 
-	require("telescope.pickers")
-		.new({}, {
-			prompt_title = "Neovim Messages",
-			finder = require("telescope.finders").new_table({
-				results = lines,
-				entry_maker = function(line)
-					return {
-						value = line,
-						display = line,
-						ordinal = line,
-					}
-				end,
-			}),
-			sorter = require("telescope.sorters").get_generic_fuzzy_sorter({}),
-			attach_mappings = function(_, map)
-				-- Optional: Map <CR> to copy the selected message into your clipboard
-				map("i", "<CR>", function()
-					local selection = require("telescope.actions.state").get_selected_entry()
-					if selection then
-						vim.fn.setreg("+", selection.value)
-						print("Copied message to clipboard!")
-					end
-				end)
-				return true
-			end,
-		})
-		:find()
-end, { desc = "Fuzzy search :messages" })
+-- treesiter
+
+-- Select previous/next treesitter node
+vim.keymap.set({ "x" }, "[n", function()
+	require("vim.treesitter._select").select_prev(vim.v.count1)
+end, { desc = "Select previous treesitter node" })
+
+vim.keymap.set({ "x" }, "]n", function()
+	require("vim.treesitter._select").select_next(vim.v.count1)
+end, { desc = "Select next treesitter node" })
+
+-- Select parent/child treesitter node or LSP selection
+vim.keymap.set({ "x", "o" }, "an", function()
+	if vim.treesitter.get_parser(nil, nil, { error = false }) then
+		require("vim.treesitter._select").select_parent(vim.v.count1)
+	else
+		vim.lsp.buf.selection_range(vim.v.count1)
+	end
+end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
+
+vim.keymap.set({ "x", "o" }, "in", function()
+	if vim.treesitter.get_parser(nil, nil, { error = false }) then
+		require("vim.treesitter._select").select_child(vim.v.count1)
+	else
+		vim.lsp.buf.selection_range(-vim.v.count1)
+	end
+end, { desc = "Select child treesitter node or inner incremental lsp selections" })

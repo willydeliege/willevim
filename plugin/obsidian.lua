@@ -19,8 +19,7 @@ require("obsidian").setup({
 		enabled = false,
 	},
 	picker = {
-		-- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
-		name = "telescope.nvim",
+		name = "snacks.picker",
 	},
 	note_id_func = require("obsidian.builtin").title_id,
 	checkbox = {

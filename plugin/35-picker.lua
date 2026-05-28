@@ -2,9 +2,30 @@ vim.pack.add({
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/nvim-tree/nvim-web-devicons",
 	{ src = "https://github.com/DrKJeff16/project.nvim/", name = "project" },
+	{ src = "https://github.com/folke/noice.nvim" },
+	{ src = "https://github.com/folke/snacks.nvim" },
+	{ src = "https://github.com/MunifTanjim/nui.nvim" },
 })
--- vim.cmd("packadd snacks")
-require("snacks").setup()
+
+require("noice").setup({
+	presets = {
+		command_palette = true,
+	},
+})
+
+require("snacks").setup({
+	bigfile = { enabled = true },
+	dashboard = { enabled = false },
+	indent = { enabled = false },
+	input = { enabled = false },
+	notifier = { enabled = true },
+	picker = { enabled = true },
+	quickfile = { enabled = true },
+	statuscolumn = { enabled = true },
+	words = { enabled = true },
+})
+vim.notify = require("snacks").notifier
+
 -- Snacks keymaps
 local wk = require("which-key")
 wk.add({
