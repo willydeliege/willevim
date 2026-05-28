@@ -1,8 +1,6 @@
----@diagnostic disable: undefined-field
 vim.pack.add({
 	"https://github.com/gbprod/yanky.nvim",
-	"https://github.com/windwp/nvim-autopairs",
-	"https://github.com/nvim-mini/mini.surround",
+	"https://github.com/nvim-mini/mini.nvim",
 	"https://github.com/kawre/neotab.nvim",
 	"https://github.com/folke/flash.nvim",
 	"https://github.com/monaqa/dial.nvim",
@@ -22,6 +20,7 @@ end
 -- Map this to <leader>U
 vim.keymap.set("n", "<leader>U", open_undotree_right, { desc = "Open Undotree on the right" })
 
+-- yanky
 require("yanky").setup({})
 vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
 vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
@@ -42,8 +41,6 @@ vim.keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
 vim.keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
 vim.keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
 
-require("nvim-autopairs").setup({})
-
 require("mini.surround").setup({
 	mappings = {
 		add = "gsa", -- Add surrounding in Normal and Visual modes
@@ -55,6 +52,8 @@ require("mini.surround").setup({
 		update_n_lines = "gsn", -- Update `n_lines`
 	},
 })
+require("mini.pairs").setup()
+
 require("neotab").setup({
 	-- Désactive <Tab> et <S-Tab> si vous souhaitez "les" binder manuellement
 	-- tabkey = "",
