@@ -69,6 +69,7 @@ require("blink.cmp").setup({
 		},
 		providers = {
 			lazydev = {
+				enabled = true,
 				name = "LazyDev",
 				module = "lazydev.integrations.blink",
 				-- make lazydev completions top priority (see `:h blink.cmp`)
