@@ -12,7 +12,6 @@ keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 keymap.set("n", "<leader>qq", "<cmd>qall<cr>", { desc = "Quit willevim" })
 keymap.set("n", "<leader>qr", "<cmd>restart<cr>", { desc = "Restart willevim" })
 keymap.set("n", "<leader>fS", "<cmd>luafile %<cr>", { desc = "Source this file" })
-keymap.set("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer" })
 keymap.set("n", "<leader>bw", "<cmd>bwipeout<cr>", { desc = "Forget buffer" })
 
 -- Remap j and k to act as gj and gk when navigating wrapped lines
@@ -47,6 +46,7 @@ do
 			{ "<leader>f", group = "Find/files", mode = { "n", "v" } },
 			{ "<leader>s", group = "Search", mode = { "n", "v" } },
 			{ "<leader>t", group = "Tasks" },
+			{ "<leader>u", group = "Toggle" },
 			{ "<leader>x", group = "Trouble" },
 			{
 				"<leader>w",
@@ -62,13 +62,13 @@ do
 	})
 end
 -- smooth resize
--- ipo C-w
-vim.pack.add({
-	"https://github.com/aronjohanns/smooth-resize.nvim",
-})
-require("smooth-resize").setup()
 
-keymap.set("n", "<leader>sc", "<cmd>Telescope command_history<cr>", { desc = "Command history" })
+vim.keymap.set("n", "<c-w><space>", function()
+	require("which-key").show({
+		keys = "<c-w>",
+		loop = true,
+	})
+end)
 
 -- treesiter
 
