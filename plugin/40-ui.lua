@@ -1,28 +1,6 @@
 vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
-	"https://github.com/stevearc/oil.nvim",
 })
-
-do -- Oil setup
-	require("oil").setup({
-		-- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
-		-- Set to false if you want some other plugin (e.g. netrw) to open when you edit directories.
-		default_file_explorer = true,
-		float = {
-			-- Padding around the floating window
-			padding = 2,
-			-- max_width and max_height can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-			max_width = 0.8,
-			max_height = 0.8,
-			border = "rounded",
-			win_options = {
-				winblend = 0,
-			},
-		},
-	})
-	vim.keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
-end
---
 do -- Lualine setup
 	require("lualine").setup({
 		options = {
