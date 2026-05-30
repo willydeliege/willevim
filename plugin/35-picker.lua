@@ -7,15 +7,16 @@ vim.pack.add({
 require("snacks").setup({
 	bigfile = { enabled = true },
 	dashboard = { enabled = false },
-	indent = { enabled = false },
+	indent = { enabled = true },
+	scope = { enabled = false },
 	input = { enabled = true },
-	xplorer = { enabled = true },
+	explorer = { enabled = true },
 	notifier = { enabled = true },
 	picker = { enabled = true },
 	quickfile = { enabled = true },
-	statuscolumn = { enabled = true },
+	statuscolumn = { enabled = false },
 	words = { enabled = true },
-	scroll = { enabled = true },
+	scroll = { enabled = false },
 })
 -- vim.notify = require("snacks").notifier -- use snacks.notifier ipo nvim-notify
 
