@@ -613,6 +613,7 @@ require("project").setup({
 	snacks = {
 		enabled = true, -- Will enable the `:Project snacks` command
 		opts = {
+			show = "names",
 			sort = "newest",
 			hidden = false,
 			title = "Select Project",
