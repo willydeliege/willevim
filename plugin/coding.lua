@@ -13,8 +13,8 @@ vim.pack.add({
 -- require("blink.cmp").build():wait(60000)
 -- require("blink.cmp").download({ force = true, tags = "*" }):wait(60000)
 
+require("mason").setup()
 --Mason install lsp servers, formatters, linters , ...
-require("mason").setup({})
 -- Enable language server
 require("lazydev").setup({
 	library = {

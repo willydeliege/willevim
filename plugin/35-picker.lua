@@ -9,14 +9,16 @@ require("snacks").setup({
 	bigfile = { enabled = true },
 	dashboard = { enabled = false },
 	indent = { enabled = false },
-	input = { enabled = false },
+	input = { enabled = true },
+	xplorer = { enabled = true },
 	notifier = { enabled = true },
 	picker = { enabled = true },
 	quickfile = { enabled = true },
 	statuscolumn = { enabled = true },
 	words = { enabled = true },
+	scroll = { enabled = true },
 })
-vim.notify = require("snacks").notifier -- use snacks.notifier ipo nvim-notify
+-- vim.notify = require("snacks").notifier -- use snacks.notifier ipo nvim-notify
 
 -- Snacks keymaps
 local wk = require("which-key")
@@ -446,7 +448,9 @@ wk.add({
 	},
 	{
 		"<leader>n",
-		"<cmd>Noice snacks<cr>",
+		function()
+			Snacks.picker.notifications()
+		end,
 		desc = "Notification History",
 	},
 	{ "<leader>bb", "<cmd>e #<cr>", desc = "Switch to Other Buffer" },
