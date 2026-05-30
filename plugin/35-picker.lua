@@ -1,7 +1,7 @@
 vim.pack.add({
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/nvim-mini/mini.nvim",
-	{ src = "https://github.com/DrKJeff16/project.nvim/", name = "project" },
+	{ src = "https://github.com/willydeliege/project.nvim/", name = "project" },
 	{ src = "https://github.com/folke/snacks.nvim" },
 })
 
