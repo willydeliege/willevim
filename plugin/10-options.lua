@@ -9,6 +9,7 @@ vim.opt.softtabstop = 2 -- Makes backspace delete 2 spaces like a tab
 vim.schedule(function()
 	vim.o.clipboard = "unnamedplus"
 end) -- Sync vim and system clipboard
+vim.opt.cursorline = true
 vim.opt.signcolumn = "yes"
 vim.opt.confirm = true -- raise dialog if you close unsaved buffer (prevent mistakes)
 vim.opt.showmode = false -- don't show mode (given by lualine)
