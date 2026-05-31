@@ -56,7 +56,7 @@ require("render-markdown").setup({
 require("checkmate").setup({
 	files = { "*.md" }, -- any .md file (instead of defaults)
 	ui = {
-		picker = "telescope", -- or "mini", "telescope", or "native"
+		picker = "snacks", -- or "mini", "telescope", or "native"
 	},
 	keys = {
 		["<leader>tt"] = {
