@@ -20,28 +20,28 @@ local function open_undotree_right()
 end
 
 -- Map this to <leader>U
-vim.keymap.set("n", "<leader>U", open_undotree_right, { desc = "Open Undotree on the right" })
+map.set("n", "<leader>U", open_undotree_right, { desc = "Open Undotree on the right" })
 
 -- yanky
 require("yanky").setup({})
-vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
-vim.keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
-vim.keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
-vim.keymap.set("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
-vim.keymap.set("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
-vim.keymap.set("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
-vim.keymap.set("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
+map.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+map.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
+map.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
+map.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
+map.set("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
+map.set("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
+map.set("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
+map.set("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
 
-vim.keymap.set("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
-vim.keymap.set("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
-vim.keymap.set("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
-vim.keymap.set("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
+map.set("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
+map.set("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
+map.set("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
+map.set("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
 
-vim.keymap.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
-vim.keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
-vim.keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
-vim.keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
+map.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
+map.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
+map.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
+map.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
 
 require("neotab").setup({
 	-- Désactive <Tab> et <S-Tab> si vous souhaitez "les" binder manuellement
@@ -72,18 +72,18 @@ config.augends:register_group({
 	},
 })
 
-vim.keymap.set("n", "<C-a>", function()
+map.set("n", "<C-a>", function()
 	require("dial.map").manipulate("increment", "normal")
 end)
 
-vim.keymap.set("n", "<C-x>", function()
+map.set("n", "<C-x>", function()
 	require("dial.map").manipulate("decrement", "normal")
 end)
 
-vim.keymap.set("v", "<C-a>", function()
+map.set("v", "<C-a>", function()
 	require("dial.map").manipulate("increment", "visual")
 end)
 
-vim.keymap.set("v", "<C-x>", function()
+map.set("v", "<C-x>", function()
 	require("dial.map").manipulate("decrement", "visual")
 end)
