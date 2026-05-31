@@ -1,20 +1,21 @@
 vim.pack.add({
 	"https://github.com/nvim-mini/mini.nvim",
 	{ src = "https://github.com/willydeliege/project.nvim/", name = "project" },
-	{ src = "https://github.com/folke/snacks.nvim" },
+	-- Start
+	-- { src = "https://github.com/folke/snacks.nvim" },
 })
 
 require("snacks").setup({
 	bigfile = { enabled = true },
 	dashboard = { enabled = false },
-	indent = { enabled = true },
+	indent = { enabled = false },
 	scope = { enabled = false },
 	input = { enabled = true },
 	explorer = { enabled = true },
 	notifier = { enabled = true },
 	picker = { enabled = true },
 	quickfile = { enabled = true },
-	statuscolumn = { enabled = false },
+	statuscolumn = { enabled = true },
 	words = { enabled = true },
 	scroll = { enabled = false },
 })
