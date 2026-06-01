@@ -97,3 +97,21 @@ vim.keymap.set({ "x", "o" }, "in", function()
 		vim.lsp.buf.selection_range(-vim.v.count1)
 	end
 end, { desc = "Select child treesitter node or inner incremental lsp selections" })
+vim.keymap.set("n", "<leader>uf", function()
+	-- If global formatting is disabled, enable it
+	if vim.g.disable_autoformat then
+		vim.g.disable_autoformat = false
+		vim.notify("Autoformat enabled")
+	else
+		-- Otherwise, disable it
+		vim.g.disable_autoformat = true
+		vim.notify("Autoformat disabled")
+	end
+end, { desc = "Toggle autoformat" })
+
+vim.keymap.set("n", "<leade>ca", function()
+	vim.lsp.buf.code_action()
+end, { desc = "Format buffer" })
+vim.keymap.set({ "n", "x" }, "<leader>cf", function()
+	require("conform").format()
+end, { desc = "Format buffer" })
