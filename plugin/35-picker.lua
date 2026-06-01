@@ -1,16 +1,22 @@
 vim.pack.add({
 	"https://github.com/nvim-mini/mini.nvim",
 	{ src = "https://github.com/willydeliege/project.nvim/", name = "project" },
-	-- Start
+	-- Start plugin
 	-- { src = "https://github.com/folke/snacks.nvim" },
 })
 
 require("snacks").setup({
 	bigfile = { enabled = true },
 	dashboard = { enabled = false },
-	indent = { enabled = false },
-	scope = { enabled = false },
 	input = { enabled = true },
+	indent = {
+		enabled = true,
+		indent = {
+			enabled = false, -- hide all indent guides
+		},
+		scope = { enabled = true }, -- show current scope only},
+		animate = { enabled = false },
+	},
 	explorer = { enabled = true },
 	notifier = { enabled = true },
 	picker = { enabled = true },
@@ -556,9 +562,6 @@ require("mini.surround").setup({
 		replace = "gsr", -- Replace surrounding
 		update_n_lines = "gsn", -- Update `n_lines`
 	},
-})
-require("mini.indentscope").setup({
-	symbol = "|",
 })
 require("mini.jump2d").setup()
 require("mini.pairs").setup({
