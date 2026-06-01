@@ -11,7 +11,6 @@ keymap.set("i", "<C-s>", "<esc><cmd>w<cr>", { desc = "Save file" })
 keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 keymap.set("n", "<leader>qq", "<cmd>qall<cr>", { desc = "Quit willevim" })
 keymap.set("n", "<leader>qr", "<cmd>restart<cr>", { desc = "Restart willevim" })
-keymap.set("n", "<leader>qr", "<cmd>restart<cr>", { desc = "Restart willevim" })
 keymap.set("n", "<leader>fS", "<cmd>luafile %<cr>", { desc = "Source this file" })
 keymap.set("n", "<leader>bw", "<cmd>bwipeout<cr>", { desc = "Forget buffer" })
 
