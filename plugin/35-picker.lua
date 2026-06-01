@@ -25,7 +25,6 @@ require("snacks").setup({
 	words = { enabled = true },
 	scroll = { enabled = false },
 })
--- vim.notify = require("snacks").notifier -- use snacks.notifier ipo nvim-notify
 
 -- Snacks keymaps
 local wk = require("which-key")
@@ -323,13 +322,6 @@ wk.add({
 			Snacks.picker.man()
 		end,
 		desc = "Man Pages",
-	},
-	{
-		"<leader>sp",
-		function()
-			Snacks.picker.lazy()
-		end,
-		desc = "Search for Plugin Spec",
 	},
 	{
 		"<leader>sq",
