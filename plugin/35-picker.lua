@@ -542,7 +542,9 @@ Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Ba
 Snacks.toggle.inlay_hints():map("<leader>uh")
 Snacks.toggle.indent():map("<leader>ug")
 Snacks.toggle.dim():map("<leader>uD")
----@type table<number, {token:lsp.ProgressToken, msg:string, done:boolean}[]>
+
+require("mini.splitjoin").setup()
+-- require('mini.cmdline').setup()
 require("mini.icons").setup()
 require("mini.surround").setup({
 	mappings = {
