@@ -1,10 +1,73 @@
 vim.pack.add({
 	"https://github.com/nvim-mini/mini.nvim",
 	{ src = "https://github.com/willydeliege/project.nvim/", name = "project" },
+	"https://github.com/ibhagwan/fzf-lua",
 	-- Start plugin
 	-- { src = "https://github.com/folke/snacks.nvim" },
 })
 
+require("project").setup({
+	enable_autochdir = false,
+	logging = {
+		enabled = false,
+	},
+	snacks = {
+		enabled = true, -- Will enable the `:Project snacks` command
+		opts = {
+			show = "names",
+			sort = "newest",
+			hidden = false,
+			title = "Select Project",
+			layout = "select",
+			-- icon = {},
+			-- path_icons = {},
+		},
+	},
+})
+vim.keymap.set("n", "<leader>fp", "<cmd>Project snacks<cr>", { desc = "Switch project" })
+require("mini.splitjoin").setup()
+-- require('mini.cmdline').setup()
+require("mini.icons").setup()
+require("mini.surround").setup({
+	mappings = {
+		add = "gsa", -- Add surrounding in Normal and Visual modes
+		delete = "gsd", -- Delete surrounding
+		find = "gsf", -- Find surrounding (to the right)
+		find_left = "gsF", -- Find surrounding (to the left)
+		highlight = "gsh", -- Highlight surrounding
+		replace = "gsr", -- Replace surrounding
+		update_n_lines = "gsn", -- Update `n_lines`
+	},
+})
+require("mini.jump2d").setup()
+require("mini.pairs").setup({
+	-- In which modes mappings from this `config` should be created
+	modes = { insert = true, command = true, terminal = false },
+
+	-- Global mappings. Each right hand side should be a pair information, a
+	-- table with at least these fields (see more in |MiniPairs.map|):
+	-- - <action> - one of 'open', 'close', 'closeopen'.
+	-- - <pair> - two character string for pair to be used.
+	-- By default pair is not inserted after `\`, quotes are not recognized by
+	-- <CR>, `'` does not insert the pair after a letter.
+	-- Only parts of tables can be tweaked (others will use these defaults).
+	mappings = {
+		["("] = { action = "open", pair = "()", neigh_pattern = "^[^\\]" },
+		["["] = { action = "open", pair = "[]", neigh_pattern = "^[^\\]" },
+		["{"] = { action = "open", pair = "{}", neigh_pattern = "^[^\\]" },
+		["<"] = { action = "open", pair = "<>", neigh_pattern = "^[^\\]" },
+
+		[")"] = { action = "close", pair = "()", neigh_pattern = "^[^\\]" },
+		["]"] = { action = "close", pair = "[]", neigh_pattern = "^[^\\]" },
+		["}"] = { action = "close", pair = "{}", neigh_pattern = "^[^\\]" },
+		[">"] = { action = "close", pair = "<>", neigh_pattern = "^[^\\]" },
+
+		['"'] = { action = "closeopen", pair = '""', neigh_pattern = "^[^\\]", register = { cr = false } },
+		["'"] = { action = "closeopen", pair = "''", neigh_pattern = "^[^%a\\]", register = { cr = false } },
+		["`"] = { action = "closeopen", pair = "``", neigh_pattern = "^[^\\]", register = { cr = false } },
+	},
+})
+require("fzf-lua").setup()
 require("snacks").setup({
 	bigfile = { enabled = true },
 	dashboard = { enabled = false },
@@ -535,65 +598,3 @@ Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Ba
 Snacks.toggle.inlay_hints():map("<leader>uh")
 Snacks.toggle.indent():map("<leader>ug")
 Snacks.toggle.dim():map("<leader>uD")
-
-require("mini.splitjoin").setup()
--- require('mini.cmdline').setup()
-require("mini.icons").setup()
-require("mini.surround").setup({
-	mappings = {
-		add = "gsa", -- Add surrounding in Normal and Visual modes
-		delete = "gsd", -- Delete surrounding
-		find = "gsf", -- Find surrounding (to the right)
-		find_left = "gsF", -- Find surrounding (to the left)
-		highlight = "gsh", -- Highlight surrounding
-		replace = "gsr", -- Replace surrounding
-		update_n_lines = "gsn", -- Update `n_lines`
-	},
-})
-require("mini.jump2d").setup()
-require("mini.pairs").setup({
-	-- In which modes mappings from this `config` should be created
-	modes = { insert = true, command = true, terminal = false },
-
-	-- Global mappings. Each right hand side should be a pair information, a
-	-- table with at least these fields (see more in |MiniPairs.map|):
-	-- - <action> - one of 'open', 'close', 'closeopen'.
-	-- - <pair> - two character string for pair to be used.
-	-- By default pair is not inserted after `\`, quotes are not recognized by
-	-- <CR>, `'` does not insert the pair after a letter.
-	-- Only parts of tables can be tweaked (others will use these defaults).
-	mappings = {
-		["("] = { action = "open", pair = "()", neigh_pattern = "^[^\\]" },
-		["["] = { action = "open", pair = "[]", neigh_pattern = "^[^\\]" },
-		["{"] = { action = "open", pair = "{}", neigh_pattern = "^[^\\]" },
-		["<"] = { action = "open", pair = "<>", neigh_pattern = "^[^\\]" },
-
-		[")"] = { action = "close", pair = "()", neigh_pattern = "^[^\\]" },
-		["]"] = { action = "close", pair = "[]", neigh_pattern = "^[^\\]" },
-		["}"] = { action = "close", pair = "{}", neigh_pattern = "^[^\\]" },
-		[">"] = { action = "close", pair = "<>", neigh_pattern = "^[^\\]" },
-
-		['"'] = { action = "closeopen", pair = '""', neigh_pattern = "^[^\\]", register = { cr = false } },
-		["'"] = { action = "closeopen", pair = "''", neigh_pattern = "^[^%a\\]", register = { cr = false } },
-		["`"] = { action = "closeopen", pair = "``", neigh_pattern = "^[^\\]", register = { cr = false } },
-	},
-})
-require("project").setup({
-	enable_autochdir = true,
-	logging = {
-		enabled = false,
-	},
-	snacks = {
-		enabled = true, -- Will enable the `:Project snacks` command
-		opts = {
-			show = "names",
-			sort = "newest",
-			hidden = false,
-			title = "Select Project",
-			layout = "select",
-			-- icon = {},
-			-- path_icons = {},
-		},
-	},
-})
-vim.keymap.set("n", "<leader>fp", "<cmd>Project snacks<cr>", { desc = "Switch project" })
