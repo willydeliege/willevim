@@ -41,12 +41,6 @@ do
 		delay = 0,
 		-- Document existing key chains
 		spec = {
-			{ "<leader>b", group = "Buffers", mode = { "n", "v" } },
-			{ "<leader>f", group = "Find/files", mode = { "n", "v" } },
-			{ "<leader>s", group = "Search", mode = { "n", "v" } },
-			{ "<leader>t", group = "Tasks" },
-			{ "<leader>u", group = "Toggle" },
-			{ "<leader>x", group = "Trouble" },
 			{
 				"<leader>w",
 				proxy = "<c-w>",

@@ -58,7 +58,6 @@ require("neogit").setup({})
 -- Keymaps
 local wk = require("which-key")
 wk.add({
-	{ "<leader>g", group = "Git" },
 	{ "<leader>gh", group = "Hunk" },
 	{ "<leader>gg", "<cmd>Neogit<cr>", { desc = "Magit" } },
 })

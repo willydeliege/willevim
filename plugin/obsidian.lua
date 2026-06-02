@@ -20,7 +20,7 @@ require("obsidian").setup({
 		enabled = false,
 	},
 	picker = {
-		name = "snacks.picker",
+		name = "fzf-lua",
 	},
 	note_id_func = require("obsidian.builtin").title_id,
 	checkbox = {

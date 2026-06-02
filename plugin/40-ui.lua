@@ -7,8 +7,8 @@ vim.pack.add({
 require("yazi").setup({
 	integrations = {
 		--- What should be done when the user wants to grep in a directory
-		grep_in_directory = "snacks.picker",
-		grep_in_selected_files = "snacks.picker",
+		grep_in_directory = "fzf-lua",
+		grep_in_selected_files = "fzf-lua",
 	},
 })
 vim.keymap.set("n", "-", "<cmd>Yazi<cr>", { desc = "File explorer" })
