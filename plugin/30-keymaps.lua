@@ -7,7 +7,6 @@ keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window"
 
 -- Vim helper keys
 keymap.set("n", "<leader>fs", "<cmd>w<cr>", { desc = "Save file" })
-keymap.set("i", "<C-s>", "<esc><cmd>w<cr>", { desc = "Save file" })
 keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 keymap.set("n", "<leader>qq", "<cmd>qall<cr>", { desc = "Quit willevim" })
 keymap.set("n", "<leader>qr", "<cmd>restart<cr>", { desc = "Restart willevim" })
