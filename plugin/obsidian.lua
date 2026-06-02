@@ -13,6 +13,8 @@ require("obsidian").setup({
 			path = "~/Documents/MyPkm/",
 		},
 	},
+	templates = { folder = "Templates" },
+	note = { template = "default.md" },
 	ui = {
 		enable = false,
 		enabled = false,
