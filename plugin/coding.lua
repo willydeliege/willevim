@@ -7,6 +7,7 @@ vim.pack.add({
 	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/romus204/tree-sitter-manager.nvim" },
 	"https://github.com/mason-org/mason.nvim",
+	"https://github.com/mfussenegger/nvim-lint",
 	-- "https://github.com/saghen/blink.lib",
 })
 -- require("blink.lib.lazy_require")
@@ -126,4 +127,17 @@ require("tree-sitter-manager").setup({
 	auto_install = true, -- if enabled, install missing parsers when editing a new file
 	-- highlight = true, -- treesitter highlighting is enabled by default
 	-- languages = {}, -- override or add new parser sources
+})
+
+require("lint").linters_by_ft = { markdown = { "markdownlint-cli2" }, lua = { "luacheck" } }
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+	callback = function()
+		-- try_lint without arguments runs the linters defined in `linters_by_ft`
+		-- for the current filetype
+		require("lint").try_lint()
+
+		-- You can call `try_lint` with a linter name or a list of names to always
+		-- run specific linters, independent of the `linters_by_ft` configuration
+		-- require("lint").try_lint("cspell")
+	end,
 })
