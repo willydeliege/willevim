@@ -1,6 +1,20 @@
 vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
+	"https://github.com/mikavilpas/yazi.nvim",
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/MagicDuck/grug-far.nvim",
 })
+require("yazi").setup({
+	integrations = {
+		--- What should be done when the user wants to grep in a directory
+		grep_in_directory = "snacks.picker",
+		grep_in_selected_files = "snacks.picker",
+	},
+})
+vim.keymap.set("n", "-", "<cmd>Yazi<cr>", { desc = "File explorer" })
+vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", { desc = "File explorer" })
+vim.keymap.set("n", "<leader>fe", "<cmd>Yazi<cr>", { desc = "File explorer" })
+vim.keymap.set("n", "<leader>fE", "<cmd>Yazi cwd<cr>", { desc = "File explorer (cwd)" })
 do -- Lualine setup
 	require("lualine").setup({
 		options = {

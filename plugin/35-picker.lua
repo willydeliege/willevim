@@ -17,7 +17,7 @@ require("snacks").setup({
 		scope = { enabled = true }, -- show current scope only},
 		animate = { enabled = false },
 	},
-	explorer = { enabled = true },
+	explorer = { enabled = false },
 	notifier = { enabled = true },
 	picker = { enabled = true },
 	quickfile = { enabled = true },
@@ -57,13 +57,6 @@ wk.add({
 			Snacks.picker.command_history()
 		end,
 		desc = "Command History",
-	},
-	{
-		"<leader>e",
-		function()
-			Snacks.explorer()
-		end,
-		desc = "File Explorer",
 	},
 	-- find
 	{

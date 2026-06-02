@@ -22,3 +22,9 @@ end
 vim.opt.swapfile = false
 vim.opt.undodir = undo_dir
 vim.opt.undofile = true
+vim.wo.foldmethod = "expr"
+-- Utilise l'expression native de Neovim ou de Treesitter pour le Markdown
+vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.wo.foldenable = true
+-- Optionnel : garde le document déplié par défaut à l'ouverture (99)
+vim.wo.foldlevel = 99
