@@ -26,7 +26,64 @@ require("lazydev").setup({
 	integrations = { lspconfig = true },
 })
 vim.lsp.enable("lua_ls")
+vim.keymap.set("n", "<leader>ud", function()
+	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end, { desc = "Toggle diagnostics" })
+vim.diagnostic.config({
+	virtual_text = true,
+})
+vim.keymap.set("n", "<leader>uv", function()
+	local current = vim.diagnostic.config().virtual_text
+	vim.diagnostic.config({
+		virtual_text = not current,
+	})
+end, { desc = "Toggle virtual text" })
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("x-lsp-attach", { clear = true }),
+	callback = function(event)
+		local client = vim.lsp.get_client_by_id(event.data.client_id)
+		if client and client:supports_method("textDocument/documentHighlight", event.buf) then
+			local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.document_highlight,
+			})
 
+			vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.clear_references,
+			})
+
+			vim.api.nvim_create_autocmd("LspDetach", {
+				group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+				callback = function(event2)
+					vim.lsp.buf.clear_references()
+					vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+				end,
+			})
+		end
+
+		-- The following code creates a keymap to toggle inlay hints in your
+		-- code, if the language server you are using supports them
+		--
+		-- This may be unwanted, since they displace some of your code
+		local map = function(keys, func, desc, mode)
+			mode = mode or "n"
+			vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+		end
+		if client and client:supports_method("textDocument/inlayHint", event.buf) then
+			map("<leader>uh", function()
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+			end, "Toggle Inlay [H]ints")
+		end
+		if client and client:supports_method("textDocument/codeLens", event.buf) then
+			-- Map <leader>cl to run the codelens at the current cursor position
+			vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { buffer = event.buf, desc = "Run CodeLens" })
+		end
+	end,
+})
 require("conform").setup({
 	formatters_by_ft = {
 		lua = { "stylua" },

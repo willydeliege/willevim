@@ -2,14 +2,11 @@ vim.pack.add({
 	"https://github.com/gbprod/yanky.nvim",
 	"https://github.com/kawre/neotab.nvim",
 	"https://github.com/monaqa/dial.nvim",
-	"https://github.com/AckslD/messages.nvim",
 })
-require("messages").setup()
 -- Load built-in undotree
 vim.cmd("packadd nvim.undotree")
 
 local map = vim.keymap
-map.set("n", "<leader>N", "<cmd>Messages<cr>", { desc = "Messages" })
 -- Create a custom function to open it on the right
 local function open_undotree_right()
 	local undotree = require("undotree")

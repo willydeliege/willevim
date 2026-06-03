@@ -12,6 +12,8 @@ keymap.set("n", "<leader>qq", "<cmd>qall<cr>", { desc = "Quit willevim" })
 keymap.set("n", "<leader>qr", "<cmd>restart<cr>", { desc = "Restart willevim" })
 keymap.set("n", "<leader>fS", "<cmd>luafile %<cr>", { desc = "Source this file" })
 keymap.set("n", "<leader>bw", "<cmd>bwipeout<cr>", { desc = "Forget buffer" })
+keymap.set("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch other buffe" })
+keymap.set("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch other buffe" })
 
 -- Remap j and k to act as gj and gk when navigating wrapped lines
 keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -39,6 +41,7 @@ do
 		preset = "helix",
 		-- Delay between pressing a key and opening which-key (milliseconds)
 		delay = 0,
+		sort = { "group", "alphanum" },
 		-- Document existing key chains
 		spec = {
 			{
@@ -102,9 +105,59 @@ vim.keymap.set("n", "<leader>uf", function()
 	end
 end, { desc = "Toggle autoformat" })
 
-vim.keymap.set("n", "<leade>ca", function()
-	vim.lsp.buf.code_action()
-end, { desc = "Format buffer" })
 vim.keymap.set({ "n", "x" }, "<leader>cf", function()
 	require("conform").format()
 end, { desc = "Format buffer" })
+vim.keymap.set("n", "<leade>ca", function()
+	vim.lsp.buf.code_action()
+end, { desc = "Code actions" })
+local function show_messages_floating()
+	-- 1. Capturer la sortie de la commande :messages
+	local messages = vim.fn.execute("messages")
+	local lines = vim.split(messages, "\n", { trimempty = true })
+
+	-- 2. Créer un scratch buffer (non listé, temporaire)
+	local buf = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+	-- 3. Configurer le buffer en lecture seule
+	vim.bo[buf].modifiable = false
+	vim.bo[buf].readonly = true
+	vim.bo[buf].buftype = "nofile"
+	vim.bo[buf].bufhidden = "wipe"
+
+	-- 4. Calculer des dimensions dynamiques (80% de l'écran)
+	local width = math.floor(vim.o.columns * 0.8)
+	local height = math.floor(vim.o.lines * 0.8)
+	local row = math.floor((vim.o.lines - height) / 2)
+	local col = math.floor((vim.o.columns - width) / 2)
+
+	-- 5. Définir les options de la fenêtre flottante
+	local opts = {
+		relative = "editor",
+		width = width,
+		height = height,
+		row = row,
+		col = col,
+		style = "minimal",
+		border = "rounded", -- Bordure élégante
+		title = " Messages ",
+		title_pos = "center",
+	}
+
+	-- 6. Ouvrir la fenêtre flottante
+	local win = vim.api.nvim_open_win(buf, true, opts)
+
+	-- 7. Ajouter un raccourci local 'q' pour fermer rapidement cette fenêtre
+	vim.keymap.set("n", "q", function()
+		if vim.api.nvim_win_is_valid(win) then
+			vim.api.nvim_win_close(win, true)
+		end
+	end, { buffer = buf, silent = true, desc = "Fermer les messages" })
+end
+
+-- Créer une commande utilisateur Neovim
+vim.api.nvim_create_user_command("MessagesFloat", show_messages_floating, {})
+
+-- Associer à un raccourci clavier (ex: <leader>m)
+vim.keymap.set("n", "<leader>m", show_messages_floating, { desc = "Messages (Flottant)" })

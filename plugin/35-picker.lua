@@ -16,6 +16,16 @@ require("project").setup({
 	},
 })
 vim.keymap.set("n", "<leader>fp", "<cmd>Project fzf-lua<cr>", { desc = "Switch project" })
+
+require("mini.notify").setup()
+require("mini.ai").setup({
+	-- NOTE: Avoid conflicts with the built-in incremental selection mappings on Neovim>=0.12 (see `:help treesitter-incremental-selection`)
+	mappings = {
+		around_next = "aa",
+		inside_next = "ii",
+	},
+	n_lines = 500,
+})
 require("mini.splitjoin").setup()
 -- require('mini.cmdline').setup()
 require("mini.icons").setup()
@@ -62,16 +72,22 @@ require("fzf-lua").setup()
 local fzf = require("fzf-lua")
 fzf.register_ui_select()
 local wk = require("which-key")
-
+-- builtin lsp functions
+vim.keymap.del("n", "gra")
+vim.keymap.del("n", "grn")
+vim.keymap.del("n", "gri")
+vim.keymap.del("n", "grr")
+vim.keymap.del("n", "grt")
+vim.keymap.del("n", "grx")
 wk.add({
 	-- Groups
 	{ "<leader>f", group = "Files" },
 	{ "<leader>s", group = "Search" },
 	{ "<leader>b", group = "Buffers" },
 	{ "<leader>g", group = "Git" },
-	{ "<leader>l", group = "LSP" },
+	{ "<leader>c", group = "Code" },
 	{ "<leader>d", group = "Diagnostics" },
-	{ "<leader>t", group = "Treesitter/Tags" },
+	{ "<leader>T", group = "Treesitter/Tags" },
 	{ "<leader>j", group = "Jumps" },
 	{ "<leader>h", group = "Help" },
 	{ "<leader>r", group = "Resume/History" },
@@ -80,6 +96,13 @@ wk.add({
 	----------------------------------------------------------------------------
 	-- FILES
 	----------------------------------------------------------------------------
+	{
+		"<leader>fb",
+		function()
+			fzf.buffers({ sort_lastused = true, tgnore_current_buffer = true })
+		end,
+		desc = "Find buffers",
+	},
 	{ "<leader>ff", fzf.files, desc = "Find Files" },
 	{ "<leader>fg", fzf.git_files, desc = "Git Files" },
 	{ "<leader>fr", fzf.oldfiles, desc = "Recent Files" },
@@ -105,13 +128,6 @@ wk.add({
 	----------------------------------------------------------------------------
 	-- BUFFERS
 	----------------------------------------------------------------------------
-	{
-		"<leader>bb",
-		function()
-			fzf.buffers({ ignore_current_buffer = true })
-		end,
-		desc = "Buffers",
-	},
 	{ "<leader>bm", fzf.marks, desc = "Marks" },
 
 	----------------------------------------------------------------------------
@@ -124,19 +140,19 @@ wk.add({
 	{ "<leader>gt", fzf.git_stash, desc = "Stash" },
 
 	----------------------------------------------------------------------------
-	-- LSP
+	-- CODE (LSP)
 	----------------------------------------------------------------------------
-	{ "<leader>ld", fzf.lsp_definitions, desc = "Definitions" },
-	{ "<leader>lD", fzf.lsp_declarations, desc = "Declarations" },
-	{ "<leader>lr", fzf.lsp_references, desc = "References" },
-	{ "<leader>li", fzf.lsp_implementations, desc = "Implementations" },
-	{ "<leader>lt", fzf.lsp_typedefs, desc = "Type Definitions" },
-	{ "<leader>ls", fzf.lsp_document_symbols, desc = "Document Symbols" },
-	{ "<leader>lS", fzf.lsp_workspace_symbols, desc = "Workspace Symbols" },
-	{ "<leader>la", vim.lsp.buf.code_action, desc = "Code Actions" },
-	{ "<leader>ln", vim.lsp.buf.rename, desc = "Rename" },
-	{ "<leader>lc", fzf.lsp_incoming_calls, desc = "Incoming Calls" },
-	{ "<leader>lC", fzf.lsp_outgoing_calls, desc = "Outgoing Calls" },
+	{ "<leader>cd", fzf.lsp_definitions, desc = "Definitions" },
+	{ "<leader>cD", fzf.lsp_declarations, desc = "Declarations" },
+	{ "<leader>cr", fzf.lsp_references, desc = "References" },
+	{ "<leader>ci", fzf.lsp_implementations, desc = "Implementations" },
+	{ "<leader>ct", fzf.lsp_typedefs, desc = "Type Definitions" },
+	{ "<leader>cs", fzf.lsp_document_symbols, desc = "Document Symbols" },
+	{ "<leader>cS", fzf.lsp_workspace_symbols, desc = "Workspace Symbols" },
+	{ "<leader>ca", vim.lsp.buf.code_action, desc = "Code Actions" },
+	{ "<leader>cn", vim.lsp.buf.rename, desc = "Rename" },
+	{ "<leader>cc", fzf.lsp_incoming_calls, desc = "Incoming Calls" },
+	{ "<leader>cC", fzf.lsp_outgoing_calls, desc = "Outgoing Calls" },
 
 	----------------------------------------------------------------------------
 	-- DIAGNOSTICS
@@ -147,9 +163,9 @@ wk.add({
 	----------------------------------------------------------------------------
 	-- TREESITTER / TAGS
 	----------------------------------------------------------------------------
-	{ "<leader>ts", fzf.treesitter, desc = "Treesitter Symbols" },
-	{ "<leader>tt", fzf.tags, desc = "Project Tags" },
-	{ "<leader>tb", fzf.btags, desc = "Buffer Tags" },
+	{ "<leader>Ts", fzf.treesitter, desc = "Treesitter Symbols" },
+	{ "<leader>Tt", fzf.tags, desc = "Project Tags" },
+	{ "<leader>Tb", fzf.btags, desc = "Buffer Tags" },
 
 	----------------------------------------------------------------------------
 	-- JUMPS
@@ -164,6 +180,8 @@ wk.add({
 	{ "<leader>hk", fzf.keymaps, desc = "Keymaps" },
 	{ "<leader>hc", fzf.commands, desc = "Commands" },
 	{ "<leader>ha", fzf.autocmds, desc = "Autocommands" },
+	{ "<leader>ho", fzf.nvim_options, desc = "Options" },
+	{ "<leader>hm", fzf.manpages, desc = "Man pages" },
 	{ "<leader>hl", fzf.highlights, desc = "Highlights" },
 
 	----------------------------------------------------------------------------
@@ -181,12 +199,25 @@ wk.add({
 	{ "<leader>sl", fzf.loclist, desc = "Location List" },
 
 	----------------------------------------------------------------------------
-	-- UI
+	-- UI/Toggle
 	----------------------------------------------------------------------------
 	{ "<leader>uc", fzf.colorschemes, desc = "Colorschemes" },
 	{ "<leader>uz", fzf.spell_suggest, desc = "Spell Suggestions" },
+
+	----------------------------------------------------------------------------
+	-- GENERAL
+	----------------------------------------------------------------------------
 	{ "<leader>/", fzf.live_grep, desc = "Grep Project" },
-	{ "<leader><leader>", fzf.files, desc = "Find Files" },
+	{
+		"<leader><leader>",
+		function()
+			require("fzf-lua").combine({
+				pickers = "oldfiles;git_files",
+				winopts = { title = "Recent and git files" },
+			})
+		end,
+		desc = "Find Files",
+	},
 	{ "gd", fzf.lsp_definitions, desc = "Goto Definition" },
 	{ "gr", fzf.lsp_references, desc = "Goto References" },
 	{ "gi", fzf.lsp_implementations, desc = "Goto Implementation" },
