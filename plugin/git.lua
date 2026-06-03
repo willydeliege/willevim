@@ -15,42 +15,53 @@ require("gitsigns").setup({
 
 		-- Navigation
 		map("n", "]h", function()
-			vim.schedule(function()
+			if vim.wo.diff then
+				vim.cmd.normal({ "]c", bang = true })
+			else
 				gitsigns.nav_hunk("next")
-			end)
-			return "<Ignore>"
-		end, { expr = true, desc = "Next Git Hunk" })
+			end
+		end, { desc = "Jump to next git [c]hange" })
 
 		map("n", "[h", function()
-			vim.schedule(function()
+			if vim.wo.diff then
+				vim.cmd.normal({ "[c", bang = true })
+			else
 				gitsigns.nav_hunk("prev")
-			end)
-			return "<Ignore>"
-		end, { expr = true, desc = "Previous Git Hunk" })
+			end
+		end, { desc = "Jump to previous git [c]hange" })
 
 		-- Actions
-		map("n", "<leader>ghs", gitsigns.stage_hunk, { desc = "Stage Git Hunk" })
-		map("n", "<leader>ghr", gitsigns.reset_hunk, { desc = "Reset Git Hunk" })
+		-- visual mode
 		map("v", "<leader>ghs", function()
 			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-		end, { desc = "Stage Hunk" })
+		end, { desc = "git [s]tage hunk" })
 		map("v", "<leader>ghr", function()
 			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-		end, { desc = "Reset Hunk" })
-		map("n", "<leader>ghR", gitsigns.reset_buffer, { desc = "Reset Entire Buffer" })
-		map("n", "<leader>ghp", gitsigns.preview_hunk, { desc = "Preview Git Hunk" })
-
-		map("n", "<leader>ghb", function()
+		end, { desc = "git [r]eset hunk" })
+		-- normal mode
+		map("n", "<leader>ghs", gitsigns.stage_hunk, { desc = "git [s]tage hunk" })
+		map("n", "<leader>ghr", gitsigns.reset_hunk, { desc = "git [r]eset hunk" })
+		map("n", "<leader>gS", gitsigns.stage_buffer, { desc = "git [S]tage buffer" })
+		map("n", "<leader>gR", gitsigns.reset_buffer, { desc = "git [R]eset buffer" })
+		map("n", "<leader>ghp", gitsigns.preview_hunk, { desc = "git [p]review hunk" })
+		map("n", "<leader>ghi", gitsigns.preview_hunk_inline, { desc = "git preview hunk [i]nline" })
+		map("n", "<leader>gb", function()
 			gitsigns.blame_line({ full = true })
-		end, { desc = "Blame Line" })
-		map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle Line Blame" })
-		map("n", "<leader>gd", gitsigns.diffthis, { desc = "Git Diff This File" })
+		end, { desc = "git [b]lame line" })
+		map("n", "<leader>gd", gitsigns.diffthis, { desc = "git [d]iff against index" })
 		map("n", "<leader>gD", function()
-			gitsigns.diffthis("~")
-		end, { desc = "Git Diff vs Last Commit" })
+			gitsigns.diffthis("@")
+		end, { desc = "git [D]iff against last commit" })
+		map("n", "<leader>gQ", function()
+			gitsigns.setqflist("all")
+		end, { desc = "git hunk [Q]uickfix list (all files in repo)" })
+		map("n", "<leader>gq", gitsigns.setqflist, { desc = "git hunk [q]uickfix list (all changes in this file)" })
+		-- Toggles
+		map("n", "<leader>ub", gitsigns.toggle_current_line_blame, { desc = "[T]oggle git show [b]lame line" })
+		map("n", "<leader>uw", gitsigns.toggle_word_diff, { desc = "[T]oggle git intra-line [w]ord diff" })
 
 		-- Text object
-		map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select Git Hunk" })
+		map({ "o", "x" }, "ih", gitsigns.select_hunk)
 	end,
 })
 require("neogit").setup({})
