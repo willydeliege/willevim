@@ -70,13 +70,25 @@
       "rev": "e99d3e28c5a2066d2d368dfe4ef3827c8d75d337",
       "src": "https://github.com/kawre/neotab.nvim"
     },
+    "neovim": {
+      "rev": "ff483051a47e27d84bdef47703538df1ed9f4a47",
+      "src": "https://github.com/rose-pine/neovim"
+    },
     "nvim-lint": {
       "rev": "d48f3a76189d03b2239f6df1b2f7e3fa8353743b",
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
+    "nvim-lsp-notify": {
+      "rev": "9541bdde0b84b7a33a24dbc2eccc3df33d4a0cdb",
+      "src": "https://github.com/mrded/nvim-lsp-notify"
+    },
     "nvim-lspconfig": {
       "rev": "07dff35e7c95288861200b788ef32d6103f107f0",
       "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "nvim-notify": {
+      "rev": "8701bece920b38ea289b457f902e2ad184131a5d",
+      "src": "https://github.com/rcarriga/nvim-notify"
     },
     "obsidian.nvim": {
       "rev": "9d8536c6d413a788b516761c8ee50f04ce7c1a8b",
