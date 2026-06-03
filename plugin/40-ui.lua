@@ -16,6 +16,19 @@ vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", { desc = "File explorer" })
 vim.keymap.set("n", "<leader>fe", "<cmd>Yazi<cr>", { desc = "File explorer" })
 vim.keymap.set("n", "<leader>fE", "<cmd>Yazi cwd<cr>", { desc = "File explorer (cwd)" })
 do -- Lualine setup
+	local function get_lsp_status()
+		local clients = vim.lsp.get_clients({ bufnr = 0 })
+		if next(clients) == nil then
+			return "No LSP"
+		end
+
+		local c_names = {}
+		for _, client in pairs(clients) do
+			table.insert(c_names, client.name)
+		end
+		return table.concat(c_names, ", ")
+	end
+
 	require("lualine").setup({
 		options = {
 			icons_enabled = true,
@@ -58,7 +71,10 @@ do -- Lualine setup
 				{ "diagnostics", icons_enabled = true },
 				"filetype",
 			},
-			lualine_y = { "progress" },
+			lualine_y = {
+				{ "progress" },
+				{ get_lsp_status, icon = "", color = { fg = "#a3be8c" } },
+			},
 			lualine_z = { "datetime" },
 		},
 		inactive_sections = {
