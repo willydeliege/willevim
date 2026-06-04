@@ -17,7 +17,25 @@ require("project").setup({
 })
 vim.keymap.set("n", "<leader>fp", "<cmd>Project fzf-lua<cr>", { desc = "Switch project" })
 
-require("mini.notify").setup()
+require("mini.notify").setup({
+	content = {
+		-- Use notification message as is for LSP progress
+		format = function(notif)
+			if notif.data.source == "lsp_progress" then
+				return notif.msg
+			end
+			return MiniNotify.default_format(notif)
+		end,
+
+		-- Show more recent notifications first
+		sort = function(notif_arr)
+			table.sort(notif_arr, function(a, b)
+				return a.ts_update > b.ts_update
+			end)
+			return notif_arr
+		end,
+	},
+})
 require("mini.ai").setup({
 	-- NOTE: Avoid conflicts with the built-in incremental selection mappings on Neovim>=0.12 (see `:help treesitter-incremental-selection`)
 	mappings = {
