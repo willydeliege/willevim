@@ -65,7 +65,7 @@ do -- Lualine setup
 		},
 		sections = {
 			lualine_a = { "mode" },
-			lualine_b = { "project", "branch" },
+			lualine_b = { "branch" },
 			lualine_c = { "filename" },
 			lualine_x = {
 				{ "diff" },

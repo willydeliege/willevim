@@ -168,4 +168,7 @@ end
 vim.api.nvim_create_user_command("MessagesFloat", show_messages_floating, {})
 
 -- Associer à un raccourci clavier (ex: <leader>m)
-vim.keymap.set("n", "<leader>m", show_messages_floating, { desc = "Messages (Flottant)" })
+vim.keymap.set("n", "<leader>m", show_messages_floating, { desc = "Messages" })
+vim.keymap.set("n", "<leader>fp", function()
+	vim.fn.system("tmux display-popup -E ~/.local/bin/tmux-sessionizer")
+end, { desc = "Swaitch project" })

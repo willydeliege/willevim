@@ -1,21 +1,7 @@
 vim.pack.add({
 	"https://github.com/nvim-mini/mini.nvim",
-	{ src = "https://github.com/willydeliege/project.nvim/", name = "project" },
 	"https://github.com/ibhagwan/fzf-lua",
 })
-
-require("project").setup({
-	enable_autochdir = false,
-	logging = {
-		enabled = false,
-	},
-	fzf_lua = {
-		enabled = true,
-		show = "names", ---@type 'paths'|'names'
-		sort = "newest", ---@type 'newest'|'oldest'
-	},
-})
-vim.keymap.set("n", "<leader>fp", "<cmd>Project fzf-lua<cr>", { desc = "Switch project" })
 
 require("mini.notify").setup({
 	content = {
@@ -36,7 +22,31 @@ require("mini.notify").setup({
 		end,
 	},
 })
-vim.keymap.set("n", "<leader>n", MiniNotify.show_history, { desc = "Notification History" })
+local function notify_history_popup()
+	local buf = vim.api.nvim_create_buf(false, true)
+
+	local lines = {}
+	for _, notif in ipairs(MiniNotify.get_all()) do
+		table.insert(lines, notif.msg)
+	end
+
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+	local win = vim.api.nvim_open_win(buf, true, {
+		relative = "editor",
+		width = math.floor(vim.o.columns * 0.8),
+		height = math.floor(vim.o.lines * 0.8),
+		row = math.floor(vim.o.lines * 0.1),
+		col = math.floor(vim.o.columns * 0.1),
+		border = "rounded",
+	})
+
+	vim.keymap.set("n", "q", function()
+		vim.api.nvim_win_close(win, true)
+	end, { desc = "Quit", buffer = buf })
+end
+
+vim.keymap.set("n", "<leader>n", notify_history_popup, { desc = "Notifications" })
 require("mini.ai").setup({
 	-- NOTE: Avoid conflicts with the built-in incremental selection mappings on Neovim>=0.12 (see `:help treesitter-incremental-selection`)
 	mappings = {
@@ -91,13 +101,6 @@ require("fzf-lua").setup()
 local fzf = require("fzf-lua")
 fzf.register_ui_select()
 local wk = require("which-key")
--- builtin lsp functions
-vim.keymap.del("n", "gra")
-vim.keymap.del("n", "grn")
-vim.keymap.del("n", "gri")
-vim.keymap.del("n", "grr")
-vim.keymap.del("n", "grt")
-vim.keymap.del("n", "grx")
 wk.add({
 	-- Groups
 	{ "<leader>f", group = "Files" },
@@ -238,6 +241,5 @@ wk.add({
 		desc = "Find Files",
 	},
 	{ "gd", fzf.lsp_definitions, desc = "Goto Definition" },
-	{ "gr", fzf.lsp_references, desc = "Goto References" },
 	{ "gi", fzf.lsp_implementations, desc = "Goto Implementation" },
 })
