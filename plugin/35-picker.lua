@@ -36,6 +36,7 @@ require("mini.notify").setup({
 		end,
 	},
 })
+vim.keymap.set("n", "<leader>n", MiniNotify.show_history, { desc = "Notification History" })
 require("mini.ai").setup({
 	-- NOTE: Avoid conflicts with the built-in incremental selection mappings on Neovim>=0.12 (see `:help treesitter-incremental-selection`)
 	mappings = {
