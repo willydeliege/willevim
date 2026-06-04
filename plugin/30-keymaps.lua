@@ -13,6 +13,7 @@ keymap.set("n", "<leader>qr", "<cmd>restart<cr>", { desc = "Restart willevim" })
 keymap.set("n", "<leader>fS", "<cmd>luafile %<cr>", { desc = "Source this file" })
 keymap.set("n", "<leader>bw", "<cmd>bwipeout<cr>", { desc = "Forget buffer" })
 keymap.set("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch other buffe" })
+keymap.set("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer" })
 keymap.set("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch other buffe" })
 
 -- Remap j and k to act as gj and gk when navigating wrapped lines
@@ -44,6 +45,13 @@ do
 		sort = { "group", "alphanum" },
 		-- Document existing key chains
 		spec = {
+			{
+				"<leader>?",
+				function()
+					require("which-key").show({ global = false })
+				end,
+				desc = "Buffer Local Keymaps (which-key)",
+			},
 			{
 				"<leader>w",
 				proxy = "<c-w>",
