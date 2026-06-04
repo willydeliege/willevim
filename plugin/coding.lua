@@ -106,7 +106,7 @@ require("blink.cmp").setup({
 	keymap = {
 		-- i'default' (recommended) for mappings similar to built-in completions
 		-- See `:help blink-cmp-config-keymap` for defining your own keymap
-		preset = "enter",
+		preset = "default",
 
 		-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
 		--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -121,7 +121,7 @@ require("blink.cmp").setup({
 	completion = {
 		-- By default, you may press `<c-space>` to show the documentation.
 		-- Optionally, set `auto_show = true` to show the documentation after a delay.
-		documentation = { auto_show = false, auto_show_delay_ms = 500 },
+		documentation = { auto_show = true, auto_show_delay_ms = 500 },
 	},
 
 	sources = {
@@ -147,15 +147,11 @@ require("blink.cmp").setup({
 		enabled = true,
 		keymap = {
 			preset = "cmdline",
-			["<Right>"] = false,
-			["<Left>"] = false,
 		},
 		completion = {
 			list = { selection = { preselect = false } },
 			menu = {
-				auto_show = function(ctx)
-					return vim.fn.getcmdtype() == ":"
-				end,
+				auto_show = true,
 			},
 			ghost_text = { enabled = true },
 		},
@@ -163,12 +159,6 @@ require("blink.cmp").setup({
 
 	snippets = { preset = "luasnip" },
 
-	-- Blink.cmp includes an optional, recommended rust fuzzy matcher,
-	-- which automatically downloads a prebuilt binary when enabled.
-	--
-	-- By default, we use the Lua implementation instead, but you may enable
-	-- the rust implementation via `'prefer_rust_with_warning'`
-	--
 	-- See `:help blink-cmp-config-fuzzy` for more information
 	fuzzy = { implementation = "rust" },
 
