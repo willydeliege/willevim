@@ -5,6 +5,7 @@ vim.pack.add({
 	"https://github.com/MagicDuck/grug-far.nvim",
 })
 require("yazi").setup({
+	open_for_directories = true,
 	integrations = {
 		--- What should be done when the user wants to grep in a directory
 		grep_in_directory = "fzf-lua",
