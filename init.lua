@@ -25,17 +25,13 @@ require("catppuccin").setup({
 		}
 	end,
 	integrations = {
-		cmp = true,
 		gitsigns = true,
-		nvimtree = false,
-		notify = true,
-		mini = {
-			enabled = true,
-			indentscope_color = "",
-		},
+		blink_cmp = true,
 		treesitter = true,
+		neogit = true,
+		mason = true,
+		fzf = true,
 	},
 })
-
 -- 2. Activation du thème
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("catppuccin-mocha")
