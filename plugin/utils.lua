@@ -1,5 +1,4 @@
 vim.pack.add({
-	"https://github.com/gbprod/yanky.nvim",
 	"https://github.com/kawre/neotab.nvim",
 	"https://github.com/monaqa/dial.nvim",
 })
@@ -18,27 +17,6 @@ end
 
 -- Map this to <leader>U
 map.set("n", "<leader>U", open_undotree_right, { desc = "Open Undotree on the right" })
-
--- yanky
-require("yanky").setup({})
-map.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-map.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
-map.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
-map.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
-map.set("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
-map.set("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
-map.set("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
-map.set("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
-
-map.set("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
-map.set("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
-map.set("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
-map.set("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
-
-map.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
-map.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
-map.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
-map.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
 
 require("neotab").setup({
 	-- Désactive <Tab> et <S-Tab> si vous souhaitez "les" binder manuellement
