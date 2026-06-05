@@ -1,6 +1,6 @@
 vim.pack.add({
 	"https://github.com/lewis6991/gitsigns.nvim",
-	"https://github.com/neogitorg/neogit",
+	"https://github.com/kdheepak/lazygit.nvim",
 })
 
 require("gitsigns").setup({
@@ -64,11 +64,10 @@ require("gitsigns").setup({
 		map({ "o", "x" }, "ih", gitsigns.select_hunk)
 	end,
 })
-require("neogit").setup({})
 
 -- Keymaps
 local wk = require("which-key")
 wk.add({
 	{ "<leader>gh", group = "Hunk" },
-	{ "<leader>gg", "<cmd>Neogit<cr>", { desc = "Magit" } },
+	{ "<leader>gg", "<cmd>Lazygit<cr>", { desc = "Magit" } },
 })
