@@ -6,11 +6,9 @@ vim.opt.expandtab = true -- Convert tabs to spaces
 vim.opt.tabstop = 2 -- Insert 2 spaces for a tab
 vim.opt.shiftwidth = 2 -- Number of spaces spaces for autoindenting
 vim.opt.softtabstop = 2 -- Makes backspace delete 2 spaces like a tab
-vim.schedule(function()
-	vim.o.clipboard = "unnamedplus"
-end) -- Sync vim and system clipboard
-vim.opt.cursorline = true
-vim.opt.signcolumn = "yes"
+vim.o.clipboard = "unnamedplus"
+vim.opt.pumborder = "rounded"
+vim.opt.pumheight = 10
 vim.opt.confirm = true -- raise dialog if you close unsaved buffer (prevent mistakes)
 vim.opt.showmode = false -- don't show mode (given by lualine)
 -- Enable persistent undo
