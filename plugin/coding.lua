@@ -144,7 +144,7 @@ require("blink.cmp").setup({
 		},
 	},
 	cmdline = {
-		enabled = true,
+		enabled = false,
 		keymap = {
 			preset = "cmdline",
 		},
