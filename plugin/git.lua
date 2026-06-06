@@ -1,73 +1,52 @@
 vim.pack.add({
-	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/kdheepak/lazygit.nvim",
 })
 
-require("gitsigns").setup({
-	on_attach = function(bufnr)
-		local gitsigns = require("gitsigns")
+require("mini.git").setup()
+-- Initialisation de mini.diff
+local diff = require("mini.diff")
 
-		local function map(mode, l, r, opts)
-			opts = opts or {}
-			opts.buffer = bufnr
-			vim.keymap.set(mode, l, r, opts)
-		end
+diff.setup({
+	-- Configuration visuelle de la colonne (signcolumn)
+	view = {
+		style = "sign",
+		signs = {
+			add = "▎", -- Ligne ajoutée (style gitsigns)
+			change = "▎", -- Ligne modifiée
+			delete = "", -- Ligne supprimée (nécessite une Nerd Font)
+		},
+	},
 
-		-- Navigation
-		map("n", "]h", function()
-			if vim.wo.diff then
-				vim.cmd.normal({ "]c", bang = true })
-			else
-				gitsigns.nav_hunk("next")
-			end
-		end, { desc = "Jump to next git [c]hange" })
-
-		map("n", "[h", function()
-			if vim.wo.diff then
-				vim.cmd.normal({ "[c", bang = true })
-			else
-				gitsigns.nav_hunk("prev")
-			end
-		end, { desc = "Jump to previous git [c]hange" })
-
-		-- Actions
-		-- visual mode
-		map("v", "<leader>ghs", function()
-			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-		end, { desc = "git [s]tage hunk" })
-		map("v", "<leader>ghr", function()
-			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-		end, { desc = "git [r]eset hunk" })
-		-- normal mode
-		map("n", "<leader>ghs", gitsigns.stage_hunk, { desc = "git [s]tage hunk" })
-		map("n", "<leader>ghr", gitsigns.reset_hunk, { desc = "git [r]eset hunk" })
-		map("n", "<leader>gS", gitsigns.stage_buffer, { desc = "git [S]tage buffer" })
-		map("n", "<leader>gR", gitsigns.reset_buffer, { desc = "git [R]eset buffer" })
-		map("n", "<leader>ghp", gitsigns.preview_hunk, { desc = "git [p]review hunk" })
-		map("n", "<leader>ghi", gitsigns.preview_hunk_inline, { desc = "git preview hunk [i]nline" })
-		map("n", "<leader>gb", function()
-			gitsigns.blame_line({ full = true })
-		end, { desc = "git [b]lame line" })
-		map("n", "<leader>gd", gitsigns.diffthis, { desc = "git [d]iff against index" })
-		map("n", "<leader>gD", function()
-			gitsigns.diffthis("@")
-		end, { desc = "git [D]iff against last commit" })
-		map("n", "<leader>gQ", function()
-			gitsigns.setqflist("all")
-		end, { desc = "git hunk [Q]uickfix list (all files in repo)" })
-		map("n", "<leader>gq", gitsigns.setqflist, { desc = "git hunk [q]uickfix list (all changes in this file)" })
-		-- Toggles
-		map("n", "<leader>ub", gitsigns.toggle_current_line_blame, { desc = "[T]oggle git show [b]lame line" })
-		map("n", "<leader>uw", gitsigns.toggle_word_diff, { desc = "[T]oggle git intra-line [w]ord diff" })
-
-		-- Text object
-		map({ "o", "x" }, "ih", gitsigns.select_hunk)
-	end,
+	-- Délai de mise à jour automatique pendant la frappe (en ms)
+	delay = { text_change = 100 },
 })
 
--- Keymaps
+-- Initialisation optionnelle de mini.git (si installé)
+require("mini.git").setup()
+
+----------------------------------------------------------------
+-- CONFIGURATION DES RACCOURCIS (KEYMAPS STYLE GITSIGNS)
+----------------------------------------------------------------
+
+-- Actions sur les Blocs
+-- Appliquer/Stager le bloc sous le curseur
+vim.keymap.set({ "n", "v" }, "<leader>ghs", function()
+	diff.operator("apply")
+end, { desc = "Stage hunk" })
+-- Réinitialiser/Annuler le bloc sous le curseur
+vim.keymap.set({ "n", "v" }, "<leader>ghr", function()
+	diff.operator("reset")
+end, { desc = "Reset hunk" })
+
+-- L'alternative moderne de mini.diff à "Preview Hunk"
+-- Au lieu d'une petite bulle flottante, cela affiche un calque (overlay) complet
+-- et persistant des différences directement dans le code. Très puissant.
+vim.keymap.set("n", "<leader>ghp", function()
+	diff.toggle_overlay(0)
+end, { desc = "Aperçu des modifications (Overlay)" })
+-- -- Keymaps
 local wk = require("which-key")
 wk.add({
-	{ "<leader>gh", group = "Hunk" },
-	{ "<leader>gg", "<cmd>Lazygit<cr>", { desc = "Magit" } },
+	{ "<leader>gh", group = "hunk" },
+	{ "<leader>gg", "<cmd>LazyGit<cr>", { desc = "Magit" } },
 })

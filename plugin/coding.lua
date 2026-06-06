@@ -2,17 +2,11 @@ vim.pack.add({
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/folke/lazydev.nvim",
 	"https://github.com/stevearc/conform.nvim",
-	{ src = "https://github.com/saghen/blink.cmp", version = "v1" },
-	{ src = "https://github.com/L3MON4D3/LuaSnip", version = vim.version.range("2.*") },
 	{ src = "https://github.com/rafamadriz/friendly-snippets" },
 	{ src = "https://github.com/romus204/tree-sitter-manager.nvim" },
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mfussenegger/nvim-lint",
-	-- "https://github.com/saghen/blink.lib",
 })
--- require("blink.lib.lazy_require")
--- require("blink.cmp").build():wait(60000)
--- require("blink.cmp").download({ force = true, tags = "*" }):wait(60000)
 
 require("mason").setup()
 --Mason install lsp servers, formatters, linters , ...
@@ -99,73 +93,50 @@ require("conform").setup({
 		}
 	end,
 })
-
 -- Completion
-require("luasnip.loaders.from_vscode").lazy_load()
-require("blink.cmp").setup({
-	keymap = {
-		-- i'default' (recommended) for mappings similar to built-in completions
-		-- See `:help blink-cmp-config-keymap` for defining your own keymap
-		preset = "default",
-
-		-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-		--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+local snippets = require("mini.snippets")
+snippets.setup({
+	snippets = {
+		snippets.gen_loader.from_lang(),
 	},
-
-	appearance = {
-		-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-		-- Adjusts spacing to ensure icons are aligned
-		nerd_font_variant = "mono",
-	},
-
-	completion = {
-		-- By default, you may press `<c-space>` to show the documentation.
-		-- Optionally, set `auto_show = true` to show the documentation after a delay.
-		documentation = { auto_show = true, auto_show_delay_ms = 500 },
-	},
-
-	sources = {
-		default = { "lsp", "path", "snippets" },
-		per_filetype = {
-			lua = { "lazydev", "lsp", "path", "snippets" },
-		},
-		providers = {
-			lazydev = {
-				enabled = true,
-				name = "LazyDev",
-				module = "lazydev.integrations.blink",
-				-- make lazydev completions top priority (see `:h blink.cmp`)
-				score_offset = 100,
-			},
-			snippets = {
-				name = "snippets",
-				module = "blink.cmp.sources.snippets",
-			},
-		},
-	},
-	cmdline = {
-		enabled = false,
-		keymap = {
-			preset = "cmdline",
-		},
-		completion = {
-			list = { selection = { preselect = false } },
-			menu = {
-				auto_show = true,
-			},
-			ghost_text = { enabled = true },
-		},
-	},
-
-	snippets = { preset = "luasnip" },
-
-	-- See `:help blink-cmp-config-fuzzy` for more information
-	fuzzy = { implementation = "rust" },
-
-	-- Shows a signature help window while you type arguments for a function
-	signature = { enabled = true },
+})
+-- 2. Configuration de mini.completion
+local completion = require("mini.completion")
+completion.setup({
+	delay = { completion = 100, info = 100 },
+	-- Utilise le LSP intégré comme source principale
+	source_func = completion.default_source,
 })
 
+-- Raccourcis intelligents (SuperTab) compatibles mini.snippets & mini.completion
+local imap = function(lhs, rhs)
+	vim.keymap.set("i", lhs, rhs, { expr = true, replace_keycodes = false })
+end
+
+-- Comportement de la touche TAB
+imap("<Tab>", function()
+	if vim.fn.pumvisible() == 1 then
+		return "<C-n>" -- Si le menu est ouvert, descend dans la liste
+	elseif MiniSnippets.expand({ insert = true }) then
+		return "" -- Si un mot-clé de snippet est détecté, l'étend
+	else
+		return "<Tab>" -- Sinon, insère une tabulation normale
+	end
+end)
+
+-- Comportement de la touche Shift-TAB
+imap("<S-Tab>", function()
+	if vim.fn.pumvisible() == 1 then
+		return "<C-p>" -- Si le menu est ouvert, remonte dans la liste
+	else
+		-- Si vous êtes dans un snippet actif, saute au point précédent
+		-- Sinon, fait un Shift-Tab standard
+		return MiniSnippets.jump("prev") and "" or "<S-Tab>"
+	end
+end)
+
+-- Valider la sélection avec Entrée (uniquement si le menu est ouvert)
+imap("<CR>", [[pumvisible() ? "\<C-y>" : "\<CR>"]])
 -- Treesitter
 require("tree-sitter-manager").setup({
 	-- Default Options
