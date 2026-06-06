@@ -1,6 +1,5 @@
 vim.pack.add({
 	"https://github.com/kawre/neotab.nvim",
-	"https://github.com/monaqa/dial.nvim",
 })
 -- Load built-in undotree
 vim.cmd("packadd nvim.undotree")
@@ -23,42 +22,23 @@ require("neotab").setup({
 	-- tabkey = "",
 })
 
--- dial.nvim
+-- Liste des mots à cycles
+local toggles = {
+	["true"] = "false",
+	["false"] = "true",
+	["yes"] = "no",
+	["no"] = "yes",
+	["on"] = "off",
+	["off"] = "on",
+}
 
-local augend = require("dial.augend")
-local config = require("dial.config")
+-- Fonction de bascule locale
+local function toggle_word()
+	local word = vim.fn.expand("<cword>")
+	if toggles[word] then
+		vim.cmd('normal! "_ciw' .. toggles[word])
+	end
+end
 
-config.augends:register_group({
-	default = {
-		augend.integer.alias.decimal,
-		augend.integer.alias.hex,
-		augend.date.alias["%Y/%m/%d"],
-		augend.constant.alias.bool,
-		augend.constant.new({
-			elements = { "and", "or" },
-			word = true,
-			cyclic = true,
-		}),
-		augend.constant.new({
-			elements = { "oui", "non" },
-			word = true,
-			cyclic = true,
-		}),
-	},
-})
-
-map.set("n", "<C-a>", function()
-	require("dial.map").manipulate("increment", "normal")
-end)
-
-map.set("n", "<C-x>", function()
-	require("dial.map").manipulate("decrement", "normal")
-end)
-
-map.set("v", "<C-a>", function()
-	require("dial.map").manipulate("increment", "visual")
-end)
-
-map.set("v", "<C-x>", function()
-	require("dial.map").manipulate("decrement", "visual")
-end)
+-- Création du raccourci (Ex: <leader>t)
+vim.keymap.set("n", "<leader>us", toggle_word, { desc = "Swap word" })
