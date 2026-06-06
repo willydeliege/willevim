@@ -1,50 +1,36 @@
 ---@diagnostic disable: missing-fields
--- 1. Définissez le chemin absolu vers votre coffre Obsidian
-local vault_path = vim.fn.expand("~/Documents/MyPkm/")
+-- Charge le paquet depuis pack/*/opt/
+vim.pack.add({ "https://github.com/obsidian-nvim/obsidian.nvim" })
 
--- 2. Récupérez le chemin du fichier markdown actuellement ouvert dans le buffer
-local current_file = vim.api.nvim_buf_get_name(0)
-
--- 3. Vérifiez si le fichier est dans le dossier Vault ET si le plugin n'est pas déjà chargé
-if current_file:find(vault_path, 1, true) then
-	if not vim.g.obsidian_loaded then
-		-- Charge le paquet depuis pack/*/opt/
-		vim.pack.add({ "https://github.com/obsidian-nvim/obsidian.nvim" })
-
-		-- Initialise le plugin
-		require("obsidian").setup({
-			legacy_commands = false, -- this will be removed in 4.0.0
-			workspaces = {
-				{
-					name = "personal",
-					path = "~/Documents/MyPkm/",
-				},
-			},
-			ui = {
-				enable = false,
-				enabled = false,
-			},
-			picker = {
-				name = "fzf-lua",
-			},
-			note_id_func = require("obsidian.builtin").title_id,
-			checkbox = {
-				enabled = false,
-			},
-			daily_notes = {
-				folder = "Daily",
-			},
-		})
-		vim.keymap.set("n", "<leader>of", "<cmd>Obsidian quick_switch<cr>", { desc = "Obsidian find file" })
-		vim.keymap.set("n", "<leader>on", "<cmd>Obsidian new<cr>", { desc = "Obsidian new file" })
-		vim.keymap.set("n", "<leader>ot", "<cmd>Obsidian today<cr>", { desc = "Obsidian open today" })
-		vim.keymap.set("n", "<leader>ob", "<cmd>Obsidian backlinkr<cr>", { desc = "Obsidian backlinks" })
-		vim.keymap.set("n", "<leader>ol", "<cmd>Obsidian links<cr>", { desc = "Obsidian links" })
-
-		-- Marque le plugin comme chargé globalement
-		vim.g.obsidian_loaded = true
-	end
-end
+-- Initialise le plugin
+require("obsidian").setup({
+	legacy_commands = false, -- this will be removed in 4.0.0
+	workspaces = {
+		{
+			name = "personal",
+			path = "~/Documents/MyPkm/",
+		},
+	},
+	ui = {
+		enable = false,
+		enabled = false,
+	},
+	picker = {
+		name = "fzf-lua",
+	},
+	note_id_func = require("obsidian.builtin").title_id,
+	checkbox = {
+		enabled = false,
+	},
+	daily_notes = {
+		folder = "Daily",
+	},
+})
+vim.keymap.set("n", "<leader>of", "<cmd>Obsidian quick_switch<cr>", { desc = "Obsidian find file" })
+vim.keymap.set("n", "<leader>on", "<cmd>Obsidian new<cr>", { desc = "Obsidian new file" })
+vim.keymap.set("n", "<leader>ot", "<cmd>Obsidian today<cr>", { desc = "Obsidian open today" })
+vim.keymap.set("n", "<leader>ob", "<cmd>Obsidian backlinkr<cr>", { desc = "Obsidian backlinks" })
+vim.keymap.set("n", "<leader>ol", "<cmd>Obsidian links<cr>", { desc = "Obsidian links" })
 vim.pack.add({
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 	"https://github.com/bngarren/checkmate.nvim",
