@@ -94,49 +94,90 @@ require("conform").setup({
 	end,
 })
 -- Completion
+-- ── 1. mini.snippets ────────────────────────────────────────────────
 local snippets = require("mini.snippets")
+
 snippets.setup({
 	snippets = {
+		-- Load snippets bundled with mini.nvim for the current filetype
 		snippets.gen_loader.from_lang(),
+
+		-- Load your own snippets from ~/.config/nvim/snippets/
+		snippets.gen_loader.from_file(vim.fn.stdpath("config") .. "/snippets/global.json"),
+
+		-- Optional: load friendly-snippets (install with your plugin manager)
+		snippets.gen_loader.from_runtime("snippets", { lang = false }),
+		function(context)
+			if context.lang == "markdown_inline" then
+				-- Redirige vers les snippets markdown normaux
+				return snippets.gen_loader.from_lang()({ lang = "markdown", filetype = "markdown" })
+			end
+		end,
+	},
+	expand = {
+		-- Called when multiple snippets match; lets you pick one
+		select = snippets.default_select,
 	},
 })
--- 2. Configuration de mini.completion
-local completion = require("mini.completion")
-completion.setup({
-	delay = { completion = 100, info = 100 },
-	-- Utilise le LSP intégré comme source principale
-	source_func = completion.default_source,
+
+-- Expose loaded snippets to mini.completion (and any LSP-capable engine)
+-- Call AFTER setup(); match=false lets the completion engine filter
+snippets.start_lsp_server({ match = false })
+
+-- ── 2. mini.completion ──────────────────────────────────────────────
+require("mini.completion").setup({
+	delay = { completion = 100, info = 100, signature = 50 },
+
+	window = {
+		info = { height = 25, width = 80, border = "single" },
+		signature = { height = 25, width = 80, border = "single" },
+	},
+
+	lsp_completion = {
+		source_func = "completefunc", -- or "omnifunc"
+		auto_setup = true,
+		-- Optionally add icons via MiniIcons:
+		-- process_items = function(items, base)
+		--   items = MiniCompletion.default_process_items(items, base)
+		--   MiniIcons.tweak_lsp_kind()
+		--   return items
+		-- end,
+	},
+
+	-- mini.snippets is detected automatically; no extra config needed here
 })
 
--- Raccourcis intelligents (SuperTab) compatibles mini.snippets & mini.completion
-local imap = function(lhs, rhs)
-	vim.keymap.set("i", lhs, rhs, { expr = true, replace_keycodes = false })
-end
+-- ── 3. mini.keymap — smart Tab / S-Tab / CR / BS ────────────────────
+local keymap = require("mini.keymap")
 
--- Comportement de la touche TAB
-imap("<Tab>", function()
-	if vim.fn.pumvisible() == 1 then
-		return "<C-n>" -- Si le menu est ouvert, descend dans la liste
-	elseif MiniSnippets.expand({ insert = true }) then
-		return "" -- Si un mot-clé de snippet est détecté, l'étend
-	else
-		return "<Tab>" -- Sinon, insère une tabulation normale
-	end
-end)
+-- <Tab>: next popup item → expand/jump snippet → indent
+keymap.map_multistep("i", "<Tab>", {
+	"pmenu_next", -- select next completion item
+	"minisnippets_next", -- jump to next snippet tabstop (or expand)
+	"increase_indent", -- fall back to indenting
+})
 
--- Comportement de la touche Shift-TAB
-imap("<S-Tab>", function()
-	if vim.fn.pumvisible() == 1 then
-		return "<C-p>" -- Si le menu est ouvert, remonte dans la liste
-	else
-		-- Si vous êtes dans un snippet actif, saute au point précédent
-		-- Sinon, fait un Shift-Tab standard
-		return MiniSnippets.jump("prev") and "" or "<S-Tab>"
-	end
-end)
+-- <S-Tab>: prev popup item → prev snippet tabstop → de-indent
+keymap.map_multistep("i", "<S-Tab>", {
+	"pmenu_prev",
+	"minisnippets_prev",
+	"decrease_indent",
+})
 
--- Valider la sélection avec Entrée (uniquement si le menu est ouvert)
-imap("<CR>", [[pumvisible() ? "\<C-y>" : "\<CR>"]])
+-- <CR>: accept selected item (pairs-aware if mini.pairs is loaded)
+keymap.map_multistep("i", "<CR>", {
+	"pmenu_accept",
+	"minipairs_cr", -- remove if you don't use mini.pairs
+})
+
+-- <BS>: pairs-aware backspace (remove if you don't use mini.pairs)
+keymap.map_multistep("i", "<BS>", {
+	"minipairs_bs",
+})
+
+-- Snippet tabstop navigation also in select mode
+keymap.map_multistep("s", "<Tab>", { "minisnippets_next" })
+keymap.map_multistep("s", "<S-Tab>", { "minisnippets_prev" })
 -- Treesitter
 require("tree-sitter-manager").setup({
 	-- Default Options
