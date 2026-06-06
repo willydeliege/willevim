@@ -1,5 +1,4 @@
 vim.pack.add({
-	"https://github.com/nvim-mini/mini.nvim",
 	"https://github.com/ibhagwan/fzf-lua",
 })
 
@@ -47,28 +46,26 @@ local function notify_history_popup()
 end
 
 vim.keymap.set("n", "<leader>n", notify_history_popup, { desc = "Notifications" })
-require("mini.ai").setup({
+local ai = require("mini.ai")
+ai.setup({
 	-- NOTE: Avoid conflicts with the built-in incremental selection mappings on Neovim>=0.12 (see `:help treesitter-incremental-selection`)
 	mappings = {
 		around_next = "aa",
 		inside_next = "ii",
+	},
+	custom_textobjects = {
+		-- Sélectionne une fonction entière avec 'af' ou l'intérieur avec 'if'
+		f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }),
+		-- Sélectionne une classe avec 'ac' ou 'ic'
+		c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }),
 	},
 	n_lines = 500,
 })
 require("mini.splitjoin").setup()
 -- require('mini.cmdline').setup()
 require("mini.icons").setup()
-require("mini.surround").setup({
-	mappings = {
-		add = "gsa", -- Add surrounding in Normal and Visual modes
-		delete = "gsd", -- Delete surrounding
-		find = "gsf", -- Find surrounding (to the right)
-		find_left = "gsF", -- Find surrounding (to the left)
-		highlight = "gsh", -- Highlight surrounding
-		replace = "gsr", -- Replace surrounding
-		update_n_lines = "gsn", -- Update `n_lines`
-	},
-})
+require("mini.surround").setup({})
+require("mini.jump").setup()
 require("mini.jump2d").setup()
 require("mini.pairs").setup({
 	-- In which modes mappings from this `config` should be created
@@ -209,10 +206,10 @@ wk.add({
 	----------------------------------------------------------------------------
 	-- HISTORY / RESUME
 	----------------------------------------------------------------------------
-	{ "<leader>rr", fzf.resume, desc = "Resume" },
-	{ "<leader>rg", fzf.registers, desc = "Registers" },
-	{ "<leader>rc", fzf.command_history, desc = "Command History" },
-	{ "<leader>rs", fzf.search_history, desc = "Search History" },
+	{ "<leader>sr", fzf.resume, desc = "Resume" },
+	{ '<leader>"', fzf.registers, desc = "Registers" },
+	{ "<leader>:", fzf.command_history, desc = "Command History" },
+	{ "<leader>?", fzf.search_history, desc = "Search History" },
 
 	----------------------------------------------------------------------------
 	-- QUICKFIX
